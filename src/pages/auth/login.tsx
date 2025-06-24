@@ -141,4 +141,12 @@ const Login = () => {
     }
 }
 
+export const logoutUser = () => {
+  if (sessionStorage.getItem('token')) {
+    sessionStorage.removeItem('userId')
+    sessionStorage.removeItem('token')
+    localStorage.removeItem('token')
+  }
+}
+
 export default Login;
