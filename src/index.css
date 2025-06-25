@@ -29,6 +29,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-color: #786BAA;
+  align-items: center;
 }
 
 h1 {
@@ -63,4 +64,26 @@ button:focus-visible {
   a:hover {
     color: #747bff;
   }
+}
+
+/* Custom scrollbar for sidebar menu */
+.sidebar-menu-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.sidebar-menu-scroll::-webkit-scrollbar-thumb {
+  background: #a18aff;
+  border-radius: 6px;
+  transition: background 0.3s;
+}
+.sidebar-menu-scroll::-webkit-scrollbar-thumb:hover {
+  background: #7b69af;
+}
+.sidebar-menu-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* For Firefox */
+.sidebar-menu-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #a18aff transparent;
 }

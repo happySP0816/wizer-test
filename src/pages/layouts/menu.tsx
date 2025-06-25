@@ -3,7 +3,7 @@ export const menuList = [
     section: 'Dashboard',
     items: [
       {
-        icon: 'AiOutlineHome',
+        icon: 'WizerHomeIcon',
         label: 'Dashboard',
         route: '/dashboard',
       },
@@ -13,37 +13,37 @@ export const menuList = [
     section: 'DECISION HUB',
     items: [
       {
-        icon: 'AiOutlineFileText',
+        icon: 'WizerLayoutIcon',
         label: 'Your Feed',
         route: '/feed',
       },
       {
-        icon: 'AiOutlineQuestionCircle',
+        icon: 'WizerQuestionIcon',
         label: 'Your Questions',
         route: '/questions',
       },
       {
-        icon: 'AiOutlineStar',
+        icon: 'WizerStarIcon',
         label: 'Panels',
         route: '/panels',
       },
       {
-        icon: 'AiOutlineTeam',
+        icon: 'WizerGroupIcon',
         label: 'Groups',
         route: '/groups',
       },
       {
-        icon: 'AiOutlineUser',
+        icon: 'WizerTeamIcon',
         label: 'People',
         route: '/people',
       },
       {
-        icon: 'AiOutlineLink',
+        icon: 'WizerLinkIcon',
         label: 'Integrations',
         route: '/integrations',
       },
       {
-        icon: 'AiOutlineProfile',
+        icon: 'WizerProfileIcon',
         label: 'Company Profile',
         route: '/company-profile',
       },
@@ -53,12 +53,12 @@ export const menuList = [
     section: 'COMMUNITY',
     items: [
       {
-        icon: 'AiOutlineFile',
+        icon: 'WizerFileIcon',
         label: 'Posts',
         route: '/posts',
       },
       {
-        icon: 'AiOutlineEdit',
+        icon: 'WizerEditIcon',
         label: 'Create Post',
         route: '/create-post',
       },
