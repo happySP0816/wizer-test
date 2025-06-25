@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { menuList } from './menu';
 import { WizerIconMap } from '@/components/icons';
 import { Button } from '@/components/components/ui/button';
+import UserAvatar from '@/components/UserAvatar';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { logoutUser } from '../auth/login';
 
@@ -17,7 +18,21 @@ export default function SidebarLayout() {
     }
   }
 
-  // Responsive: detect if mobile (window width < 768px)
+  const getUserInfo = () => {
+    try {
+      const userData = sessionStorage.getItem('user');
+      if (userData) {
+        return JSON.parse(userData);
+      }
+    } catch (error) {
+      console.error('Error parsing user data from session storage:', error);
+    }
+    return null;
+  };
+
+  const userInfo = getUserInfo();
+  const userName = userInfo?.name || userInfo?.firstName || userInfo?.lastName;
+
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -28,7 +43,6 @@ export default function SidebarLayout() {
 
   return (
     <div style={{ display: 'flex', width: '100vw', height: '100vh', margin: 0, padding: 0, position: 'relative' }}>
-      {/* Hamburger for mobile */}
       {isMobile && (
         <div
           onClick={() => setSidebarOpen(true)}
@@ -56,7 +70,7 @@ export default function SidebarLayout() {
           </div>
         </div>
       )}
-      {/* Backdrop overlay */}
+
       {isMobile && isSidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
@@ -80,18 +94,17 @@ export default function SidebarLayout() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: '24px 0',
-          minHeight: '100vh',
-          position: isMobile ? 'fixed' : 'relative',
+          height: '100vh',
+          position: isMobile ? 'fixed' : 'fixed',
           top: 0,
           left: isMobile ? (isSidebarOpen ? 0 : -260) : 0,
           zIndex: 130,
           background: '#7b69af',
-          boxShadow: isMobile && isSidebarOpen ? '2px 0 16px rgba(0,0,0,0.10)' : undefined,
+          boxShadow: isMobile && isSidebarOpen ? '2px 0 16px rgba(0,0,0,0.10)' : '2px 0 16px rgba(0,0,0,0.10)',
           transition: 'left 0.3s',
-          height: '100vh',
         }}
       >
-        {/* Close button for mobile */}
+
         <div>
           <div className='relative text-center mb-8'>
             <div style={{ fontWeight: 'bold', fontSize: 28, letterSpacing: 2 }}>wizer</div>
@@ -107,11 +120,12 @@ export default function SidebarLayout() {
               </div>
             )}
           </div>
-          {/* Scrollable menu area */}
+
           <div style={{
-            maxHeight: 'calc(100vh - 280px)', // leave space for avatar/logout
+            flex: 1,
             overflowY: 'auto',
             paddingRight: 4,
+            marginBottom: 16,
           }} className="sidebar-menu-scroll">
             <nav>
               {menuList.map((section, sectionIdx) => {
@@ -170,19 +184,29 @@ export default function SidebarLayout() {
             </nav>
           </div>
         </div>
-        <div className='flex-none' style={{ textAlign: 'center', padding: '0 0 12px 0' }}>
-          <div style={{ marginBottom: 8 }}>
-            <img
-              src="https://randomuser.me/api/portraits/men/32.jpg"
-              alt="avatar"
-              style={{ width: 40, height: 40, borderRadius: '50%', border: '2px solid #fff', margin: '0 auto' }}
-            />
-            <div style={{ fontSize: 12, marginTop: 4 }}>Shib Willoughby</div>
+
+        <div className='flex-none' style={{ textAlign: 'center', padding: '0 0 12px 0', borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: 'auto' }}>
+          <div style={{ marginBottom: 8, paddingTop: 12 }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
+              <UserAvatar 
+                user={userInfo}
+                size="md"
+                className="border-2 border-white"
+              />
+            </div>
+            <div style={{ fontSize: 12, marginTop: 4 }}>{userName}</div>
           </div>
           <Button className={`text-white w-[200px] !border !border-white rounded-[3px] !h-10`} onClick={() => handleLogoutPress('/login')}>LOGOUT</Button>
         </div>
       </aside>
-      <main style={{ flex: 1, background: '#fff', minHeight: '100vh' }}>
+      <main style={{ 
+        flex: 1, 
+        background: '#fff', 
+        minHeight: '100vh',
+        marginLeft: isMobile ? 0 : 240,
+        overflowY: 'auto',
+        width: isMobile ? '100%' : 'calc(100vw - 240px)'
+      }}>
         <Outlet />
       </main>
     </div>

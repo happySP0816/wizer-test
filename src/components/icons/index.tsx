@@ -136,6 +136,19 @@ export const WizerEditIcon: React.FC<IconProps> = ({ size = 20, style }) => (
     </svg>
 );
 
+export const UserRoundIcon: React.FC<IconProps> = ({ size = 20, style }) => (
+    <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        style={style}
+    >
+        <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"/>
+        <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"/>
+    </svg>
+);
+
 // Icon mapping object for easy access
 export const WizerIconMap: Record<string, React.FC<IconProps>> = {
   WizerHomeIcon,
@@ -148,4 +161,5 @@ export const WizerIconMap: Record<string, React.FC<IconProps>> = {
   WizerProfileIcon,
   WizerFileIcon,
   WizerEditIcon,
+  UserRoundIcon,
 }; 

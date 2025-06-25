@@ -35,7 +35,6 @@ const AppRoutes = () => (
         <Route path="/create-post" element={<CreatePost />} />
       </Route>
 
-      {/* Redirect any unknown routes to home */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   </Router>
