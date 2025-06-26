@@ -23,15 +23,15 @@ const UserProfileStats: React.FC<UserProfileStatsProps> = ({
   ]
 
   return (
-    <Card className="border-0 shadow-none">
-      <CardContent className="p-4">
-        <div className="flex items-center space-x-4">
+    <Card className="border-0 shadow-none w-full">
+      <CardContent className="px-4 w-full">
+        <div className="flex items-center space-x-4 justify-around w-full">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
               <Typography variant="h6" className="font-bold text-gray-900">
                 {stat.value}
               </Typography>
-              <Typography variant="body2" className="text-gray-500">
+              <Typography className="text-[10px] font-normal text-gray-500">
                 {stat.label}
               </Typography>
             </div>

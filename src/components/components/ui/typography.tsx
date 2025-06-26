@@ -14,7 +14,7 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
     return (
       <Component
         ref={ref}
-        className={cn(getVariantClasses(variant), className)}
+        className={cn(getVariantClasses(variant), "text-primary", className)}
         {...props}
       >
         {children}
@@ -62,13 +62,13 @@ function getVariantClasses(variant: string): string {
     case 'h6':
       return 'scroll-m-20 text-base font-semibold tracking-tight'
     case 'body1':
-      return 'leading-7 [&:not(:first-child)]:mt-6'
+      return 'leading-7'
     case 'body2':
-      return 'text-sm leading-7 [&:not(:first-child)]:mt-6'
+      return 'text-sm leading-7'
     case 'caption':
       return 'text-sm text-muted-foreground'
     default:
-      return 'leading-7 [&:not(:first-child)]:mt-6'
+      return 'leading-7'
   }
 }
 

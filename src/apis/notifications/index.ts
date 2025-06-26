@@ -39,7 +39,7 @@ export const getNotifications = async (): Promise<Notification[]> => {
 }
 
 // Get notifications for specific user (using inbox endpoint)
-export const getUserNotifications = async (userId: string): Promise<Notification[]> => {
+export const getUserNotifications = async (): Promise<Notification[]> => {
   try {
     const response = await axios.get('/inbox')
     return response.data

@@ -1,59 +1,71 @@
 import React from 'react'
-import { Card, CardContent, CardHeader } from '@/components/components/ui/card'
+import { Card, CardContent } from '@/components/components/ui/card'
 import { Typography } from '@/components/components/ui/typography'
-import { Button } from '@/components/components/ui/button'
-import UserAvatar from '@/components/UserAvatar'
 import type { Post, Invite } from '@/apis/dashboard'
+import moment from 'moment'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/components/ui/avatar'
 
 interface FeedsProps {
   invite: Invite
   post: Post
   image: string
-  backgroundimage: string
 }
 
-const Feeds: React.FC<FeedsProps> = ({ invite, post, image, backgroundimage }) => {
+const notificationTitles: Record<string, string> = {
+  post_invite_notification: ` invited you to vote on a decision. `,
+  post_feedback_notification: 'Please provide feedback for your decision. ',
+  friend_request_notification: ' friend request.',
+  post_vote_notification: ' voted on your decision. ',
+  new_post_comment_notification: "commented on your decision. "
+}
+
+const Feeds: React.FC<FeedsProps> = ({ invite, post, image }) => {
+  const getAvatarName = (username: string | undefined): string => {
+    if (!username) return ''
+    const names = username.split(' ')
+    if (names.length >= 2) {
+      const initials = names.map(name => name.charAt(0)).join(' ')
+
+      return initials.toUpperCase()
+    }
+    
+    return names[0].charAt(0).toUpperCase()
+  }
   return (
-    <Card className="mb-4 hover:shadow-md transition-shadow">
-      <CardHeader className="pb-2">
-        <div className="flex items-center space-x-3">
-          <UserAvatar 
-            user={{ image, name: post.owner.name }}
-            size="md"
-          />
-          <div>
-            <Typography variant="h6" className="font-semibold">
-              {post.owner.name}
-            </Typography>
-            <Typography variant="body2" className="text-gray-500">
-              {new Date(post.createdAt).toLocaleDateString()}
-            </Typography>
-          </div>
+    <Card className="hover:shadow-md transition-shadow border border-[#767676]">
+      <div className="px-4 py-1.5">
+        <div className="flex items-right justify-end space-x-3">
+          <Typography className='text-[10px] font-bold text-primary text-right'>
+            {moment(parseInt(invite.createdAt)).format('D MMMM YYYY')}
+          </Typography>
+          <Typography className='text-[10px] font-bold text-[#767676] text-right'>
+            {moment(parseInt(invite.createdAt)).format('h:mma')}
+          </Typography>
         </div>
-      </CardHeader>
-      <CardContent>
-        <Typography variant="h6" className="font-semibold mb-2">
-          {post.title}
-        </Typography>
-        <Typography variant="body2" className="text-gray-600 mb-4">
-          {post.content}
-        </Typography>
-        {backgroundimage && (
-          <div className="mb-4">
-            <img
-              src={backgroundimage}
-              alt="Post media"
-              className="w-full h-48 object-cover rounded-lg"
-            />
-          </div>
-        )}
-        <div className="flex justify-end space-x-2">
-          <Button variant="outline" size="sm">
-            View Details
-          </Button>
-          <Button size="sm">
-            Respond
-          </Button>
+      </div>
+      <CardContent className='flex items-start !pl-5 gap-2'>
+        <Avatar 
+          className='feedUserImage w-10 h-10'
+        >
+          <AvatarImage src={image} alt="@shadcn" />
+          <AvatarFallback>
+            {getAvatarName(invite.from?.user?.name)}
+          </AvatarFallback>
+        </Avatar>
+        <div>
+          <span className="text-primary font-semibold mb-2 break-words text-sm">
+            {invite?.from?.user?.name || invite?.postComment?.from?.user?.name || invite?.voteFrom?.user?.name || invite?.friendRequest?.from?.user?.name || invite?.friendRequest?.from?.user?.username}
+          </span>{' '}
+          <span className='text-black text-sm'>
+            {notificationTitles[(invite as any).type] || ''}{' '}
+          </span>
+          {post?.question && (
+            <span 
+              className='text-sm text-black font-normal italic break-words'
+            >
+              {'"' + post.question + '"'}
+            </span>
+          )}
         </div>
       </CardContent>
     </Card>

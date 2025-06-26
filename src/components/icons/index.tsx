@@ -136,7 +136,7 @@ export const WizerEditIcon: React.FC<IconProps> = ({ size = 20, style }) => (
     </svg>
 );
 
-export const UserRoundIcon: React.FC<IconProps> = ({ size = 20, style }) => (
+export const WizerProfileEditIcon: React.FC<IconProps> = ({ size = 20, style }) => (
     <svg
         width={size}
         height={size}
@@ -144,11 +144,10 @@ export const UserRoundIcon: React.FC<IconProps> = ({ size = 20, style }) => (
         fill="currentColor"
         style={style}
     >
-        <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"/>
-        <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"/>
+        <path d="M3 16H7.24C7.37161 16.0008 7.50207 15.9755 7.62391 15.9258C7.74574 15.876 7.85656 15.8027 7.95 15.71L14.87 8.78L17.71 6C17.8037 5.90704 17.8781 5.79644 17.9289 5.67458C17.9797 5.55272 18.0058 5.42201 18.0058 5.29C18.0058 5.15799 17.9797 5.02728 17.9289 4.90542C17.8781 4.78356 17.8037 4.67296 17.71 4.58L13.47 0.29C13.377 0.196272 13.2664 0.121877 13.1446 0.0711086C13.0227 0.0203399 12.892 -0.00579834 12.76 -0.00579834C12.628 -0.00579834 12.4973 0.0203399 12.3754 0.0711086C12.2536 0.121877 12.143 0.196272 12.05 0.29L9.23 3.12L2.29 10.05C2.19732 10.1434 2.12399 10.2543 2.07423 10.3761C2.02446 10.4979 1.99924 10.6284 2 10.76V15C2 15.2652 2.10536 15.5196 2.29289 15.7071C2.48043 15.8946 2.73478 16 3 16ZM12.76 2.41L15.59 5.24L14.17 6.66L11.34 3.83L12.76 2.41ZM4 11.17L9.93 5.24L12.76 8.07L6.83 14H4V11.17ZM19 18H1C0.734784 18 0.48043 18.1054 0.292893 18.2929C0.105357 18.4804 0 18.7348 0 19C0 19.2652 0.105357 19.5196 0.292893 19.7071C0.48043 19.8946 0.734784 20 1 20H19C19.2652 20 19.5196 19.8946 19.7071 19.7071C19.8946 19.5196 20 19.2652 20 19C20 18.7348 19.8946 18.4804 19.7071 18.2929C19.5196 18.1054 19.2652 18 19 18Z"/>
     </svg>
-);
 
+);
 // Icon mapping object for easy access
 export const WizerIconMap: Record<string, React.FC<IconProps>> = {
   WizerHomeIcon,
@@ -161,5 +160,5 @@ export const WizerIconMap: Record<string, React.FC<IconProps>> = {
   WizerProfileIcon,
   WizerFileIcon,
   WizerEditIcon,
-  UserRoundIcon,
+  WizerProfileEditIcon
 }; 

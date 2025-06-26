@@ -1,24 +1,21 @@
-import axios from 'src/services/interceptor'
+import customAxios from 'src/services/interceptor'
+import { type AxiosResponse } from 'axios'
+
+interface UserCategory {
+  id: number
+  name: string
+}
 
 export interface Post {
   id: string
   title: string
   content: string
-  owner: {
-    id: string
-    name: string
-    image: string
-  }
-  medias?: Array<{
-    files: Array<{
-      url: string
-    }>
-  }>
-  mediasC?: Array<{
-    id: string
-  }>
   createdAt: string
-  updatedAt: string
+  owner: {
+    name: string
+    image?: string
+  }
+  question: string
 }
 
 export interface Invite {
@@ -28,77 +25,158 @@ export interface Invite {
   postFeedback?: {
     postId: string
   }
-}
-
-export interface InvitePostData {
-  invite: Invite
-  post: Post | null
-}
-
-export const getFetchPostId = async (userId: number): Promise<Invite[]> => {
-  try {
-    // Try different possible notification endpoints
-    let response
-    try {
-      response = await axios.get(`/notifications/${userId}`)
-    } catch {
-      try {
-        response = await axios.get(`/users/${userId}/notifications`)
-      } catch {
-        try {
-          response = await axios.get('/notifications')
-        } catch {
-          // If all endpoints fail, return empty array
-          console.log('No notifications endpoint found, returning empty array')
-          return []
-        }
+  createdAt: string
+  from: {
+    user: {
+      name: string
+    }
+  }
+  type: string
+  post: {
+    id: string
+    title: string
+    content: string
+    createdAt: string
+    owner: {
+      name: string
+      image?: string
+    }
+  }
+  postComment?: {
+    from: {
+      user: {
+        name: string
+        username: string
+        image?: string
       }
     }
-    return response.data
-  } catch (error) {
-    console.error('Error fetching post IDs:', error)
-    // Return empty array instead of throwing error
-    return []
   }
-}
-
-export const getAllPostForFeed = async (postId: string): Promise<Post> => {
-  try {
-    const response = await axios.get(`/posts/${postId}`)
-    return response.data
-  } catch (error) {
-    console.error(`Error fetching post ${postId}:`, error)
-    throw error
+  voteFrom?: {
+    user: {
+      name: string
+      username: string
+      image?: string
+    }
   }
-}
-
-export const getUserProfile = async (userId: string) => {
-  try {
-    // Try different possible endpoints for user profile
-    let response
-    try {
-      response = await axios.get(`/users/${userId}/profile`)
-    } catch {
-      try {
-        response = await axios.get(`/users/${userId}`)
-      } catch {
-        response = await axios.get(`/user/profile`)
+  friendRequest?: {
+    from: {
+      user: {
+        name: string
+        username: string
+        image?: string
       }
     }
+  }
+}
+
+export const fetchUserCategories = async (userId: number): Promise<UserCategory[]> => {
+  const response: AxiosResponse<UserCategory[]> = await customAxios.get(`/categories/user-categories/${userId}`)
+
+  return response.data
+}
+
+export const fetchUserDetailByUsername = async (username: string) => {
+  try {
+    const response = await customAxios.get(`/users/username/${username}`)
+
     return response.data
   } catch (error) {
-    console.error('Error fetching user profile:', error)
+    console.error('Error fetching user:', error)
     throw error
   }
 }
 
-// Get current user profile (alternative approach)
-export const getCurrentUserProfile = async () => {
+export const fetchUserVotesByUserName = async (username: string) => {
   try {
-    const response = await axios.get('/user/profile')
+    const response = await customAxios.get('/org_Dashboard/post/votecount-byOrganization', {
+      params: {
+        username: username
+      }
+    })
+
     return response.data
   } catch (error) {
-    console.error('Error fetching current user profile:', error)
+    console.error('Error fetching user:', error)
     throw error
   }
-} 
+}
+
+export const getAllPostsForUser = async (organizationId: any, username: any, postclosed: any, limit: any, page: any) => {
+  try {
+    const response = await customAxios.get(`/org_Dashboard/getPost/byOrganization`, {
+      params: {
+        organizationId: organizationId,
+        username: username,
+        postclosed: postclosed,
+        limit: limit,
+        page: page
+      }
+    })
+
+    return response.data
+  } catch (error) {
+    console.error('Error fetching posts by organization:', error)
+    throw error
+  }
+}
+
+export const getRatingByCategory = async (userID: any = {}) => {
+  const response = await customAxios.get(`/leaderboard/user/ranking/category-wise?userId=${userID}`)
+
+  return response.data
+}
+
+export const getPostResult = async (userId: number, limit: number, page: number): Promise<any> => {
+  const queryParams = {
+    userId: userId,
+    limit: limit,
+    page: page
+  }
+
+  try {
+    const response = await customAxios.get<any>(`/org_Dashboard/get/yourDecision/winningoption/ofPost`, {
+      params: queryParams
+    })
+
+    return response.data
+  } catch (error) {
+    console.error('Error fetching post result:', error)
+    throw error
+  }
+}
+
+export const fetchInvitePost = async (postId: any): Promise<any> => {
+  try {
+    const response = await customAxios.get(`/posts/auth/${postId}`)
+
+    return response.data
+  } catch (error) {
+    console.error('Error fetching post result:', error)
+    throw error
+  }
+}
+export const getFetchPostId = async (limit?: any, offset?: any): Promise<any> => {
+  try {
+    const response = await customAxios.get('/inbox', {
+      params: {
+        limit: limit,
+        offset: offset
+      }
+    })
+    
+return response.data
+  } catch (error) {
+    console.error('Error fetching post result:', error)
+    throw error
+  }
+}
+export const getAllPostForFeed = async (postId: any): Promise<any> => {
+  try {
+    const response = await customAxios.get(`/posts/auth/All/${postId}`)
+    
+return response.data
+  } catch (error) {
+    console.error('Error fetching post result:', error)
+    throw error
+  }
+}

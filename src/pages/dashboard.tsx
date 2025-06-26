@@ -3,13 +3,11 @@ import { Button } from '@/components/components/ui/button'
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/components/ui/dialog'
 import { Typography } from '@/components/components/ui/typography'
 import Feeds from '@/screens/Dashboard/feeds'
-import { getAllPostForFeed, getFetchPostId, getUserProfile, getCurrentUserProfile } from '@/apis/dashboard'
+import { getAllPostForFeed, getFetchPostId } from '@/apis/dashboard'
 import type { Invite, Post } from '@/apis/dashboard'
 import YourDecisionMaking from '@/screens/Dashboard/YourDecisionMaking'
 import { UserCategories, UserProfile, UserProfileStats } from '@/global/Components/user-info'
-import { getNotifications, getUserNotifications, markAllNotificationsAsRead, getUnreadNotificationsCount } from '@/apis/notifications'
-import type { Notification } from '@/apis/notifications'
-import NotificationItem from '@/components/notifications/NotificationItem'
+import authRoute from '@/authentication/authRoute'
 
 interface UserProfileType {
   id: string
@@ -23,13 +21,14 @@ interface UserProfileType {
   numberOfFollowing: number
 }
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  userProfile?: UserProfileType
+}
+
+const Dashboard: React.FC<DashboardProps> = (props) => {
   const [isWizerOpen, setIsWizerOpen] = useState(false)
   const [isOrganizationOpen, setIsOrganizationOpen] = useState(false)
-  const [notifications, setNotifications] = useState<Notification[]>([])
-  const [userProfile, setUserProfile] = useState<UserProfileType | null>(null)
-  const [profileError, setProfileError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [invitePostData, setInvitePostData] = useState<Array<{ invite: Invite; post: Post | null }> | null>(null)
   const [timeOfDay, setTimeOfDay] = useState('')
   const [iconUrl, setIconUrl] = useState('')
 
@@ -47,171 +46,121 @@ const Dashboard: React.FC = () => {
     }
   }, [])
 
-  const fetchNotifications = async () => {
+  const notificationCount = useCallback(async () => {
+    const postIds = new Set()
     try {
-      // Try to get notifications for current user first
-      let notificationsData = await getNotifications()
-      
-      // If no notifications from current user endpoint, try user-specific endpoint
-      if (!notificationsData || notificationsData.length === 0) {
-        const userId = userProfile?.id || sessionStorage.getItem('userId')
-        if (userId) {
-          notificationsData = await getUserNotifications(userId)
+      const response = await getFetchPostId(35)
+
+      response.forEach((item: any) => {
+        if (item.postId) {
+          postIds.add(item.postId)
+        }
+        if (item.postFeedback && item.postFeedback.postId) {
+          postIds.add(item.postFeedback.postId)
+        }
+      })
+      const fetchedData = []
+
+      for (const postId of postIds) {
+        try {
+          const data = await getAllPostForFeed(postId as string)
+          fetchedData.push(data)
+        } catch (error) {
+          // console.error(`Error fetching data for postId ${postId}:`, error)
         }
       }
-      
-      setNotifications(notificationsData || [])
+
+      const postMap: Record<string, Post> = {}
+      fetchedData.forEach(post => {
+        postMap[post.id] = post
+      })
+      const organizedData = response?.map((item: any) => ({
+        invite: item,
+        post: (item?.postId && postMap[item.postId]) || (item?.postFeedback?.postId && postMap[item.postFeedback.postId]) || null
+      }))
+      // console.log('organizedData', organizedData)
+      setInvitePostData(organizedData)
     } catch (error) {
-      console.error('Error fetching notifications:', error)
-      setNotifications([])
+      // console.error('Error fetching postIds:', error)
     }
-  }
+  }, [getFetchPostId, getAllPostForFeed])
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true)
-      setProfileError(null)
-      
-      try {
-        // Try to get user data from session storage first
-        const storedUser = sessionStorage.getItem('user')
-        let profile: UserProfileType | null = null
-        
-        if (storedUser) {
-          try {
-            const userData = JSON.parse(storedUser)
-            profile = {
-              id: userData.id || sessionStorage.getItem('userId') || '',
-              name: userData.name || userData.username || 'User',
-              username: userData.username || userData.name || 'user',
-              image: userData.image,
-              bio: userData.bio || '',
-              numberOfPosts: userData.numberOfPosts || 0,
-              numberOfFollowers: userData.numberOfFollowers || 0,
-              numberOfFriends: userData.numberOfFriends || 0,
-              numberOfFollowing: userData.numberOfFollowing || 0
-            }
-          } catch (e) {
-            console.log('Could not parse stored user data')
-          }
-        }
-        
-        if (!profile) {
-          try {
-            profile = await getCurrentUserProfile()
-          } catch (e) {
-            const userId = sessionStorage.getItem('userId')
-            if (userId) {
-              profile = await getUserProfile(userId)
-            }
-          }
-        }
-        
-        if (profile) {
-          setUserProfile(profile)
-          await fetchNotifications()
-        } else {
-          setProfileError('Could not load user profile. Please try logging in again.')
-        }
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error)
-        setProfileError('Failed to load dashboard data. Please check your connection and try again.')
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    
-    fetchData()
-  }, [])
+    notificationCount()
+  }, [notificationCount])
 
-  const handleMarkAllAsRead = async () => {
-    await markAllNotificationsAsRead()
-    await fetchNotifications()
-  }
-
-  const handleNotificationUpdate = () => {
-    fetchNotifications() 
-  }
-
-  const unreadNotifications = notifications.filter(n => n.status === 'unread')
-  
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <Typography variant="h6">Loading dashboard...</Typography>
-        </div>
-      </div>
-    )
-  }
+  const totalNotifcations = invitePostData?.filter(({ post, invite }) => post !== null && invite.status !== 'read')
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b">
-        <Typography variant="h4" className="flex items-center gap-3 text-primary">
-          {iconUrl && <img src={iconUrl} alt="time" className="w-8 h-8" />}
+    <div className="min-h-screen p-[30px] flex flex-col gap-8">
+      <div className="flex items-center justify-between flex-none">
+        <Typography className="flex items-center text-4xl font-bold">
+          {iconUrl && <img src={iconUrl} alt="time" className="w-8 h-8 mr-4" />}
           Good {timeOfDay},{' '}
-          <span className="font-bold">{userProfile?.username || 'User'}</span>
+          <span className="font-bold">{props.userProfile?.username || 'User'}</span>
         </Typography>
         <div className="flex gap-2">
-          <Button onClick={() => setIsWizerOpen(true)}>
+          <Button className='bg-[#0084CE] hover:bg-[#0084CE]/90 rounded-4xl' onClick={() => setIsWizerOpen(true)}>
             Join the Wizer Community
           </Button>
-          <Button onClick={() => setIsOrganizationOpen(true)}>
+          <Button className='bg-[#0084CE] hover:bg-[#0084CE]/90 rounded-4xl' onClick={() => setIsOrganizationOpen(true)}>
             Add your Organization
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 p-6">
-        <div className="md:col-span-8 col-span-12">
-          <Typography variant="h5" className="mb-2">YOUR DECISION PROFILE</Typography>
-          {profileError && (
-            <div className="mb-4 p-4 bg-red-100 text-red-700 rounded">
-              {profileError}
-            </div>
-          )}
-          {userProfile && <YourDecisionMaking userProfile={userProfile} />}
-          <div className="mt-8 mb-4 flex items-center justify-between">
-            <Typography variant="h5" className="flex items-center gap-2">
-              NOTIFICATIONS
-              <span className="text-base font-normal">({unreadNotifications.length} new events)</span>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 flex-1">
+        <div className="md:col-span-8 col-span-12 flex flex-col h-full w-full gap-8">
+          {/* profile section */}
+          <div className='flex-none'>
+            <Typography variant="h6" className="mb-2.5 font-bold">
+              YOUR DECISION PROFILE
             </Typography>
-            {unreadNotifications.length > 0 && (
-              <Button variant="outline" size="sm" onClick={handleMarkAllAsRead}>
-                Mark All as Read
-              </Button>
-            )}
+            {props.userProfile && <YourDecisionMaking userProfile={props.userProfile} />}
           </div>
-          {notifications.length > 0 ? (
-            <div className="space-y-2">
-              {notifications.map((notification) => (
-                <NotificationItem
-                  key={notification.id}
-                  notification={notification}
-                  onUpdate={handleNotificationUpdate}
-                />
-              ))}
+          {/* notification section */}
+          <div className='flex-1'>
+            <Typography variant="h6" className="mb-2.5 font-bold">
+              NOTIFICATION FEED
+            </Typography>
+            <div className='flex flex-col gap-2.5'>
+              {invitePostData && totalNotifcations && totalNotifcations.length > 0 ? (
+                invitePostData.map(({ invite, post }) => {
+                  const feedPostId = post?.id
+                  const notificationId = invite?.id
+                  let image = post?.owner?.image || ''
+                  if (image && !image.startsWith('http://') && !image.startsWith('https://') && !image.startsWith('ftp://')) {
+                    image = `https://api.wizer.life/api/users/${image}`
+                  }
+                  if (invite.status === 'read') {
+                    return null
+                  }
+
+                  return (
+                    <div
+                      key={`${notificationId}-${feedPostId}`}
+                      onClick={() => console.log("")}
+                    >
+                      <Feeds invite={invite} post={post!} image={image} />
+                    </div>
+                  )
+                })
+              ) : (
+                <></>
+              )}
             </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-12">
-              <img src="/wizermainlogo.svg" alt="No Data" className="w-24 h-24 mb-4" />
-              <Typography variant="h5" className="font-bold mb-2">You are all caught up.</Typography>
-            </div>
-          )}
+          </div>
         </div>
         <div className="md:col-span-4 col-span-12">
-          <Typography variant="h5" className="mb-2">PROFILE</Typography>
-          {userProfile && (
-            <div className="bg-white rounded-lg border p-4 flex flex-col items-center justify-center">
-              <UserProfile {...userProfile} />
-              <UserCategories userId={userProfile.id} />
+          <Typography variant="h6" className="mb-2.5 font-bold">PROFILE</Typography>
+          {props.userProfile && (
+            <div className="bg-white rounded-lg border p-4 flex flex-col items-center justify-center relative gap-9">
+              <UserProfile image={props.userProfile.image} name={props.userProfile.name} bio={props.userProfile.bio} />
+              <UserCategories userId={props.userProfile.id}/>
               <UserProfileStats
-                numberOfPosts={userProfile.numberOfPosts}
-                numberOfFollowers={userProfile.numberOfFollowers}
-                numberOfFriends={userProfile.numberOfFriends}
-                numberOfFollowing={userProfile.numberOfFollowing}
+                numberOfPosts={props.userProfile.numberOfPosts}
+                numberOfFollowers={props.userProfile.numberOfFollowers}
+                numberOfFriends={props.userProfile.numberOfFriends}
+                numberOfFollowing={props.userProfile.numberOfFollowing}
               />
             </div>
           )}
@@ -246,4 +195,4 @@ const Dashboard: React.FC = () => {
   )
 }
 
-export default Dashboard
+export default authRoute(Dashboard)

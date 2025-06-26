@@ -2,14 +2,42 @@ import React, { useState } from 'react';
 import { menuList } from './menu';
 import { WizerIconMap } from '@/components/icons';
 import { Button } from '@/components/components/ui/button';
-import UserAvatar from '@/components/UserAvatar';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { logoutUser } from '../auth/login';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/components/ui/avatar';
+import authRoute from '@/authentication/authRoute';
 
-export default function SidebarLayout() {
+interface UserProfileType {
+  id: string
+  name: string
+  username: string
+  image?: string
+  bio?: string
+  numberOfPosts: number
+  numberOfFollowers: number
+  numberOfFriends: number
+  numberOfFollowing: number
+}
+
+interface SidebarLayoutProps {
+  userProfile?: UserProfileType
+}
+const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  const getAvatarName = (username: string | undefined): string => {
+    if (!username) return ''
+    const names = username.split(' ')
+    if (names.length >= 2) {
+      const initials = names.map(name => name.charAt(0)).join(' ')
+
+      return initials.toUpperCase()
+    }
+    
+    return names[0].charAt(0).toUpperCase()
+  }
 
   const handleLogoutPress = (url?: string) => {
     logoutUser()
@@ -18,21 +46,6 @@ export default function SidebarLayout() {
     }
   }
 
-  const getUserInfo = () => {
-    try {
-      const userData = sessionStorage.getItem('user');
-      if (userData) {
-        return JSON.parse(userData);
-      }
-    } catch (error) {
-      console.error('Error parsing user data from session storage:', error);
-    }
-    return null;
-  };
-
-  const userInfo = getUserInfo();
-  const userName = userInfo?.name || userInfo?.firstName || userInfo?.lastName;
-
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -40,6 +53,18 @@ export default function SidebarLayout() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  const getUserImageSrc = () => {
+    if (!props.userProfile?.image) return ''
+
+    if (props.userProfile?.image.includes('googleusercontent')) {
+      return props.userProfile?.image
+    } else {
+      return `https://api.wizer.life/api/users/${props.userProfile?.image}`
+    }
+  }
+
+  const userImageSrc = getUserImageSrc()
 
   return (
     <div style={{ display: 'flex', width: '100vw', height: '100vh', margin: 0, padding: 0, position: 'relative' }}>
@@ -188,13 +213,16 @@ export default function SidebarLayout() {
         <div className='flex-none' style={{ textAlign: 'center', padding: '0 0 12px 0', borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: 'auto' }}>
           <div style={{ marginBottom: 8, paddingTop: 12 }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
-              <UserAvatar 
-                user={userInfo}
-                size="md"
-                className="border-2 border-white"
-              />
+              <Avatar 
+                className='feedUserImage w-10 h-10'
+              >
+                <AvatarImage src={userImageSrc} alt="@shadcn" />
+                <AvatarFallback>
+                  {getAvatarName(props.userProfile?.name)}
+                </AvatarFallback>
+              </Avatar>
             </div>
-            <div style={{ fontSize: 12, marginTop: 4 }}>{userName}</div>
+            <div style={{ fontSize: 12, marginTop: 4 }}>{props.userProfile?.name}</div>
           </div>
           <Button className={`text-white w-[200px] !border !border-white rounded-[3px] !h-10`} onClick={() => handleLogoutPress('/login')}>LOGOUT</Button>
         </div>
@@ -212,3 +240,5 @@ export default function SidebarLayout() {
     </div>
   );
 }
+
+export default authRoute(SidebarLayout);

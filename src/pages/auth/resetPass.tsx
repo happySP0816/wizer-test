@@ -10,9 +10,9 @@ const ResetPass = () => {
     const navigate = useNavigate();
     const location = useLocation();
     
-    const [email, setEmail] = useState('');
+    const [email] = useState('');
     const [password, setPassword] = useState('');
-    const [emailError, setEmailError] = useState('');
+    const [, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [token, setToken] = useState<string | null>(null);
     const [redirect, setRedirect]  = useState<string | null>(null);
@@ -33,11 +33,6 @@ const ResetPass = () => {
             setRedirect(redirectTo)
         }
     }, [])
-
-    const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value.toLowerCase())
-        setEmailError('')
-    }
 
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
       setPassword(e.target.value)
