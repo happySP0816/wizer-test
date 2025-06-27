@@ -4,7 +4,7 @@ import { Input } from "@/components/components/ui/input";
 import { signIn } from "@/apis/auth";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -17,21 +17,31 @@ const Login = () => {
     const [token, setToken] = useState<string | null>(null);
     const [redirect, setRedirect]  = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isPageLoading, setIsPageLoading] = useState(true);
 
     const isLoginFormValid = email.trim() !== '' && password.trim() !== '';
     const searchParams = new URLSearchParams(location.search);
     const redirectTo = searchParams.get('redirectTo') ? decodeURIComponent(searchParams.get('redirectTo') as string) : '/dashboard';
     
     useEffect(() => {
-        // Fetch token from session storage
-        const storedToken = sessionStorage.getItem('token')
-        setToken(storedToken)
-        if (storedToken) {
-            navigate(redirectTo, { replace: true }) // Use replace to avoid double redirects
-        } else {
+        // Simulate initial loading and fetch token from session storage
+        const initializePage = async () => {
+            // Add a small delay to show loading state
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            const storedToken = sessionStorage.getItem('token')
             setToken(storedToken)
-            setRedirect(redirectTo)
+            if (storedToken) {
+                navigate(redirectTo, { replace: true }) // Use replace to avoid double redirects
+            } else {
+                setToken(storedToken)
+                setRedirect(redirectTo)
+            }
+            setIsPageLoading(false)
         }
+
+        initializePage()
     }, [])
 
     const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -50,9 +60,10 @@ const Login = () => {
 
     const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-    
+        setIsLoading(true)
+
         const payload = { email, password }
-    
+
         try {
           const response = await signIn(payload)
           if (response.error) {
@@ -84,8 +95,23 @@ const Login = () => {
           }
         } catch (error) {
           console.error('An error occurred:', error)
+        } finally {
+          setIsLoading(false)
         }
     }
+
+    // Loading component
+    const LoadingSpinner = () => (
+        <div className="flex flex-col items-center justify-center w-full gap-4 min-h-screen">
+            <Loader2 className="h-8 w-8 animate-spin text-white" />
+            <p className="text-white text-sm">Loading...</p>
+        </div>
+    );
+
+    if (isPageLoading) {
+        return <LoadingSpinner />;
+    }
+
     if (!token) {
         return (
             <div className="flex flex-col items-center justify-center w-full gap-7">
@@ -128,9 +154,14 @@ const Login = () => {
                         <a className="!text-white" href="/forgot-password">Forgot Password?</a>
                     </div>
                     <div className="flex flex-col items-center justify-center w-[250px] gap-3">
-                        <Button variant="outline" className={`text-black w-full !border !border-[#786BAA] rounded-[3px] !h-10`} 
-                            disabled={!isLoginFormValid} type="submit">
-                            Login
+                        <Button variant="outline" className={`text-black w-full !border !border-[#786BAA] rounded-[3px] !h-10`}
+                            disabled={!isLoginFormValid || isLoading} type="submit">
+                            {isLoading ? (
+                                <div className="flex items-center gap-2">
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    Logging in...
+                                </div>
+                            ) : 'Login'}
                         </Button>
                         <span className="text-white">or</span>
                         <Button className={`text-white w-full !border !border-white rounded-[3px] !h-10`}>Login with Google</Button>
