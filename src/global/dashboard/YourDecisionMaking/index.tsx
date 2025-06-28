@@ -38,7 +38,6 @@ const YourDecisionMaking: React.FC<YourDecisionMakingProps> = ({ userProfile }) 
     navigate('/decision-profile-report')
   }
   const handleButtonClick = () => {
-    console.log('----> takeId', takeId)
     if (takeId) {
       navigate(`/decision-profile-test?decision_takeId=${String(takeId)}&updatedQuestions=True`)
     } else {

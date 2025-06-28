@@ -31,6 +31,7 @@ body {
   background-color: #786BAA;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 h1 {

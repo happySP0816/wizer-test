@@ -50,7 +50,6 @@ const authRoute = <P extends AuthRouteProps>(Component: ComponentType<P>) => {
               setUserProfile(UserProfile)
               setAuthenticated(true)
               setUserPersonalityQuestion(userPersonalityQuestion.personalityQuestionsAnswers)
-              console.log('at this point', userPersonalityQuestion)
               if('small_decision' in response) {
                 if (
                   UserProfile.bio === null ||

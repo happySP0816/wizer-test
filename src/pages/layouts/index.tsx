@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { menuList } from './menu';
-import { WizerIconMap } from '@/components/icons';
+import { WizerIconMap, WizerToptIcon } from '@/components/icons';
 import { Button } from '@/components/components/ui/button';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { logoutUser } from '../auth/login';
@@ -26,6 +26,7 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const getAvatarName = (username: string | undefined): string => {
     if (!username) return ''
@@ -54,6 +55,33 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Add scroll event listener
+  React.useEffect(() => {
+    const handleScroll = (e: Event) => {
+      const target = e.target as HTMLElement;
+      const scrollTop = target.scrollTop;
+      console.log(scrollTop)
+      setShowScrollTop(scrollTop > 300);
+    };
+
+    // Find the main element and attach scroll listener to it
+    const mainElement = document.querySelector('main');
+    if (mainElement) {
+      mainElement.addEventListener('scroll', handleScroll);
+      return () => mainElement.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
+  const scrollToTop = () => {
+    const mainElement = document.querySelector('main');
+    if (mainElement) {
+      mainElement.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const getUserImageSrc = () => {
     if (!props.userProfile?.image) return ''
 
@@ -71,27 +99,13 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
       {isMobile && (
         <div
           onClick={() => setSidebarOpen(true)}
-          style={{
-            position: 'fixed',
-            top: 20,
-            left: 20,
-            zIndex: 120,
-            width: 36,
-            height: 36,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: '#7b69af',
-            borderRadius: 8,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-            cursor: 'pointer',
-          }}
+          className='fixed top-4 left-4 z-120 w-9 h-9 flex items-center justify-center bg-[#7b69af] rounded-8 box-shadow-[0_2px_8px_rgba(0,0,0,0.08)] cursor-pointer'
         >
           {/* Hamburger icon */}
-          <div style={{ width: 22, height: 16, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div style={{ height: 3, background: '#fff', borderRadius: 2 }} />
-            <div style={{ height: 3, background: '#fff', borderRadius: 2 }} />
-            <div style={{ height: 3, background: '#fff', borderRadius: 2 }} />
+          <div className='w-5 h-3 flex flex-col justify-between'>
+            <div className='h-0.5 bg-[#fff] rounded-2' />
+            <div className='h-0.5 bg-[#fff] rounded-2' />
+            <div className='h-0.5 bg-[#fff] rounded-2' />
           </div>
         </div>
       )}
@@ -99,53 +113,28 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
       {isMobile && isSidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            background: 'rgba(0,0,0,0.35)',
-            zIndex: 110,
-          }}
+          className='fixed top-0 left-0 w-full h-full bg-black/35 z-110'
         />
       )}
       {/* Sidebar */}
       <aside
-        style={{
-          width: 240,
-          color: '#fff',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          padding: '24px 0',
-          height: '100vh',
-          position: isMobile ? 'fixed' : 'fixed',
-          top: 0,
-          left: isMobile ? (isSidebarOpen ? 0 : -260) : 0,
-          zIndex: 130,
-          background: '#7b69af',
-          boxShadow: isMobile && isSidebarOpen ? '2px 0 16px rgba(0,0,0,0.10)' : '2px 0 16px rgba(0,0,0,0.10)',
-          transition: 'left 0.3s',
-        }}
+        className={`w-60 color-white flex flex-col justify-between pt-4 pb-1 h-screen z-130 bg-[#7b69af] box-shadow-[2px_0_16px_rgba(0,0,0,0.10)] transition-left duration-300 ${isMobile ? 'fixed' : 'fixed'} ${isMobile ? isSidebarOpen ? 'left-0' : 'left-[-260px]' : 'left-0'}`}
       >
-
-        <div>
-          <div className='relative text-center mb-8'>
-            <div style={{ fontWeight: 'bold', fontSize: 28, letterSpacing: 2 }}>wizer</div>
-            {isMobile && (
-              <div className='absolute right-4 top-1'>
-                <Button
-                  onClick={() => setSidebarOpen(false)}
-                  aria-label="Close menu"
-                  className='focus:!border-none focus:!outline-none text-3xl'
-                >
-                  &times;
-                </Button>
-              </div>
-            )}
-          </div>
-
+        <div className='relative text-center mb-8'>
+          <div className='font-bold text-4xl tracking-2 text-white'>wizer</div>
+          {isMobile && (
+            <div className='absolute right-4 top-1'>
+              <Button
+                onClick={() => setSidebarOpen(false)}
+                aria-label="Close menu"
+                className='focus:!border-none focus:!outline-none text-3xl'
+              >
+                &times;
+              </Button>
+            </div>
+          )}
+        </div>
+        <div className='h-[calc(100vh-100px)] overflow-y-auto'>
           <div style={{
             flex: 1,
             overflowY: 'auto',
@@ -222,7 +211,7 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
                 </AvatarFallback>
               </Avatar>
             </div>
-            <div style={{ fontSize: 12, marginTop: 4 }}>{props.userProfile?.name}</div>
+            <div className='text-white text-xs mt-1'>{props.userProfile?.name}</div>
           </div>
           <Button className={`text-white w-[200px] !border !border-white rounded-[3px] !h-10`} onClick={() => handleLogoutPress('/login')}>LOGOUT</Button>
         </div>
@@ -237,6 +226,41 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
       }}>
         <Outlet />
       </main>
+
+      {/* Scroll to top button */}
+      {showScrollTop && (
+        <Button
+          onClick={scrollToTop}
+          style={{
+            position: 'fixed',
+            bottom: 30,
+            right: isMobile ? 30 : 50,
+            zIndex: 1000,
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            background: '#7b69af',
+            color: '#fff',
+            border: 'none',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.1)';
+            e.currentTarget.style.background = '#6a5a9e';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.background = '#7b69af';
+          }}
+        >
+          <WizerToptIcon size={50} />
+        </Button>
+      )}
     </div>
   );
 }

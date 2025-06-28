@@ -7,7 +7,7 @@ import Home from '@/pages/home';
 import SidebarLayout from '@/pages/layouts';
 import Dashboard from '@/pages/dashboard';
 import Feed from '@/pages/feed';
-import Questions from '@/pages/questions';
+import Questions from '@/pages/question';
 import Panels from '@/pages/panels';
 import Groups from '@/pages/groups';
 import People from '@/pages/people';
@@ -25,7 +25,7 @@ const AppRoutes = () => (
       <Route element={<SidebarLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/feed" element={<Feed />} />
-        <Route path="/questions" element={<Questions />} />
+        <Route path="/ask-new-question" element={<Questions />} />
         <Route path="/panels" element={<Panels />} />
         <Route path="/groups" element={<Groups />} />
         <Route path="/people" element={<People />} />
@@ -34,7 +34,6 @@ const AppRoutes = () => (
         <Route path="/posts" element={<Posts />} />
         <Route path="/create-post" element={<CreatePost />} />
       </Route>
-
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   </Router>

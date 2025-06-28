@@ -20,7 +20,7 @@ export const menuList = [
       {
         icon: 'WizerQuestionIcon',
         label: 'Your Questions',
-        route: '/questions',
+        route: '/ask-new-question',
       },
       {
         icon: 'WizerStarIcon',
