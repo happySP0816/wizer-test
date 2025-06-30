@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { addTeam, getTeams } from '@/apis/teams'
 import { Progress } from '@/components/components/ui/progress'
 import { Input } from '@/components/components/ui/input'
-import TeamCard from '@/pages/all-teams/team-card'
 import authRoute from '@/authentication/authRoute'
 import { Button } from '@/components/components/ui/button'
+import TeamCard from '@/pages/all-teams/team-card'
 
 interface TeamData {
   name: string
@@ -93,20 +93,22 @@ const AllTeams: React.FC<PanelsProps> = (props) => {
   )
   
   return (
-    <div>
-      <div>
-        <div>
-          <div>
-            All Groups ({filteredTeams.length})
-          </div>
+    <div className="max-w-4xl mx-auto bg-white min-h-screen rounded-b-xl shadow">
+      <div className="bg-purple-500 rounded-t-xl px-8 py-6 flex items-center justify-between">
+        <h1 className="text-white text-2xl font-semibold">All Groups ({filteredTeams.length})</h1>
+        <div className="flex gap-4">
           <Input
             placeholder="Search Groups"
             value={searchQuery}
             onChange={handleSearchChange}
-            className="text-white border-white placeholder:text-white"
+            className="bg-transparent border border-white text-white placeholder:text-white"
           />
-          <Button onClick={() => setIsAddTeam(true)}>Add new group</Button>
+          <Button variant="outline" className="border-purple-400 text-purple-500 hover:bg-purple-50" onClick={() => setIsAddTeam(true)}>
+            Add new group
+          </Button>
         </div>
+      </div>
+      <div className="p-6">
         {loading ? (
           <div>
             <Progress />
@@ -114,71 +116,83 @@ const AllTeams: React.FC<PanelsProps> = (props) => {
         ) : (
           <div>
             {isAddTeam && (
-              <div>
-                <div>
-                  <div>
-                    Create a new group
-                  </div>
-                  <div>
-                    <div>
-                      Group name
-                    </div>
-                    <input
-                      type='text'
-                      onChange={e =>
-                        setTeamCardData(cardData => {
-                          return {
-                            ...cardData,
-                            [e.target.name]: e.target.value
-                          }
-                        })
-                      }
-                      value={teamCardData.name}
-                      name='name'
-                    />
-                  </div>
-                  <div>
-                    <div onClick={() => setIsAddTeam(false)}>Cancel</div>
-                    {loadingCreate ? (
-                      <div>
-                        <Progress />
-                      </div>
-                    ) : (
-                      <div
-                        onClick={() => {
-                          if (teamCardData.name) {
-                            createTeam(teamCardData.name)
-                          }
-                        }}
-                      >
-                        Create group
-                      </div>
-                    )}
-                  </div>
+              <div className="border-2 border-purple-400 rounded-lg p-6 my-6">
+                <div className="mb-4 text-lg font-semibold text-gray-800">Create a new group</div>
+                <div className="mb-4">
+                  <label className="block font-medium mb-1">Group name</label>
+                  <input
+                    type='text'
+                    onChange={e =>
+                      setTeamCardData(cardData => {
+                        return {
+                          ...cardData,
+                          [e.target.name]: e.target.value
+                        }
+                      })
+                    }
+                    value={teamCardData.name}
+                    name='name'
+                    className="border border-purple-400 rounded px-3 py-2 w-full"
+                  />
+                </div>
+                <div className="flex gap-4 justify-end">
+                  <Button variant="outline" className="border-purple-400 text-purple-500 hover:bg-purple-50" onClick={() => setIsAddTeam(false)}>Cancel</Button>
+                  {loadingCreate ? (
+                    <Progress />
+                  ) : (
+                    <Button
+                      variant="outline"
+                      className="border-purple-400 text-purple-500 hover:bg-purple-50"
+                      onClick={() => {
+                        if (teamCardData.name) {
+                          createTeam(teamCardData.name)
+                        }
+                      }}
+                    >
+                      Create group
+                    </Button>
+                  )}
                 </div>
               </div>
             )}
             {filteredTeams.length > 0 &&
               filteredTeams.map((team: TeamData) => {
                 return (
-                  <TeamCard
-                    key={team.id}
-                    teamData={team}
-                    setTeams={setTeams}
-                    setSnackbarOpen={setSnackbarOpen}
-                    setSnackbarMessage={setSnackbarMessage}
-                    setSeverity={setSeverity}
-                    user={props.user}
-                    userProfile={props.userProfile}
-                  />
+                  <div key={team.id} className="border-2 border-purple-400 rounded-lg p-6 my-6">
+                    <div className="flex justify-between items-start">
+                      <h2 className="text-xl font-semibold text-gray-800">{team.name}</h2>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="icon" className="border-purple-400 hover:bg-purple-50">
+                          <img src="/images/pages/teams/pen-icon.svg" alt="edit" className="w-5 h-5" />
+                        </Button>
+                        <Button variant="outline" size="icon" className="border-purple-400 hover:bg-purple-50">
+                          <img src="/images/pages/teams/trash-icon.svg" alt="delete" className="w-5 h-5" />
+                        </Button>
+                      </div>
+                    </div>
+                    <hr className="my-4 border-purple-200" />
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="font-bold text-gray-700">Members</div>
+                        <div className="text-gray-600 text-sm">
+                          {team.numberOfParticipants === 0
+                            ? 'This team currently has [no members]!'
+                            : `This team currently has [${team.numberOfParticipants} members]!`}
+                        </div>
+                      </div>
+                      <Button variant="outline" className="border-purple-400 text-purple-500 hover:bg-purple-50">
+                        Add Members
+                      </Button>
+                    </div>
+                  </div>
                 )
               })}
             {!filteredTeams.length && (
-              <div style={{ height: isAddTeam ? '20vh' : '50vh' }}>
-                <div>
+              <div style={{ height: isAddTeam ? '20vh' : '50vh' }} className="flex flex-col items-center justify-center">
+                <div className="text-lg font-semibold text-gray-700 mb-2">
                   You have 0 groups
                 </div>
-                <div>
+                <div className="text-gray-500">
                   Why don't you make a new one?
                 </div>
               </div>
@@ -186,12 +200,6 @@ const AllTeams: React.FC<PanelsProps> = (props) => {
           </div>
         )}
       </div>
-
-      {snackbarOpen && (
-        <div>
-          {snackbarMessage}
-        </div>
-      )}
     </div>
   )
 }

@@ -95,61 +95,58 @@ const AllCrowds: React.FC<PanelsProps> = (props) => {
     fetchCrowds()
   }, [])
   
-return (
-    <div>
-      <div>
-        <div>
-          <Typography variant="h5">All Panels ({crowds.length})</Typography>
-          <Button onClick={() => setIsAddCrowd(true)}>Add new panel</Button>
-        </div>
+  return (
+    <div className="max-w-4xl mx-auto bg-white min-h-screen rounded-b-xl shadow">
+      <div className="bg-purple-500 rounded-t-xl px-8 py-6 flex items-center justify-between">
+        <h1 className="text-white text-2xl font-semibold">All Panels ({crowds.length})</h1>
+        <Button variant="outline" className="border-purple-400 text-purple-500 hover:bg-purple-50" onClick={() => setIsAddCrowd(true)}>
+          Add new panel
+        </Button>
+      </div>
+      <div className="p-6">
         {loading ? (
-          <Progress value={50}>
-            <ProgressIndicator />
-          </Progress>
+          <div>
+            <Progress />
+          </div>
         ) : (
           <div>
             {isAddCrowd && (
-              <div>
-                <div>
-                  <div>
-                    Create a new panel
-                  </div>
-                  <div>
-                    <div>
-                      Panel title
-                    </div>
-                    <Input
-                      type='text'
-                      onChange={e =>
-                        setCrowdCardData(cardData => {
-                          return {
-                            ...cardData,
-                            title: e.target.value
-                          }
-                        })
-                      }
-                      value={crowdCardData.title}
-                      name='title'
-                    />
-                  </div>
-                  <div>
-                    <Button onClick={() => setIsAddCrowd(false)}>Cancel</Button>
-                    {loadingCreate ? (
-                      <Progress value={50}>
-                        <ProgressIndicator />
-                      </Progress>
-                    ) : (
-                      <Button
-                        onClick={() => {
-                          if (crowdCardData.title) {
-                            createCrowd(crowdCardData.title)
-                          }
-                        }}
-                      >
-                        Create panel
-                      </Button>
-                    )}
-                  </div>
+              <div className="border-2 border-purple-400 rounded-lg p-6 my-6">
+                <div className="mb-4 text-lg font-semibold text-gray-800">Create a new panel</div>
+                <div className="mb-4">
+                  <label className="block font-medium mb-1">Panel name</label>
+                  <input
+                    type='text'
+                    onChange={e =>
+                      setCrowdCardData(cardData => {
+                        return {
+                          ...cardData,
+                          title: e.target.value
+                        }
+                      })
+                    }
+                    value={crowdCardData.title}
+                    name='title'
+                    className="border border-purple-400 rounded px-3 py-2 w-full"
+                  />
+                </div>
+                <div className="flex gap-4 justify-end">
+                  <Button variant="outline" className="border-purple-400 text-purple-500 hover:bg-purple-50" onClick={() => setIsAddCrowd(false)}>Cancel</Button>
+                  {loadingCreate ? (
+                    <Progress />
+                  ) : (
+                    <Button
+                      variant="outline"
+                      className="border-purple-400 text-purple-500 hover:bg-purple-50"
+                      onClick={() => {
+                        if (crowdCardData.title) {
+                          createCrowd(crowdCardData.title)
+                        }
+                      }}
+                    >
+                      Create panel
+                    </Button>
+                  )}
                 </div>
               </div>
             )}
@@ -157,23 +154,41 @@ return (
               crowds.map((crowd: CrowdData) => {
                 if (!crowd || crowd.id === undefined) return null;
                 return (
-                  <CrowdCard
-                    key={crowd.id}
-                    crowdData={crowd}
-                    setCrowds={setCrowds}
-                    setSnackbarOpen={setSnackbarOpen}
-                    setSnackbarMessage={setSnackbarMessage}
-                    setSeverity={setSeverity}
-                    user={props.user}
-                  />
+                  <div key={crowd.id} className="border-2 border-purple-400 rounded-lg p-6 my-6">
+                    <div className="flex justify-between items-start">
+                      <h2 className="text-xl font-semibold text-gray-800">{crowd.title}</h2>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="icon" className="border-purple-400 hover:bg-purple-50">
+                          <img src="/images/pages/teams/pen-icon.svg" alt="edit" className="w-5 h-5" />
+                        </Button>
+                        <Button variant="outline" size="icon" className="border-purple-400 hover:bg-purple-50">
+                          <img src="/images/pages/teams/trash-icon.svg" alt="delete" className="w-5 h-5" />
+                        </Button>
+                      </div>
+                    </div>
+                    <hr className="my-4 border-purple-200" />
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="font-bold text-gray-700">Members</div>
+                        <div className="text-gray-600 text-sm">
+                          {crowd.numberOfParticipants === 0
+                            ? 'This panel currently has [no members]!'
+                            : `This panel currently has [${crowd.numberOfParticipants} members]!`}
+                        </div>
+                      </div>
+                      <Button variant="outline" className="border-purple-400 text-purple-500 hover:bg-purple-50">
+                        Add Members
+                      </Button>
+                    </div>
+                  </div>
                 )
               })}
             {!crowds.length && (
-              <div style={{ height: isAddCrowd ? '20vh' : '50vh' }}>
-                <div>
+              <div style={{ height: isAddCrowd ? '20vh' : '50vh' }} className="flex flex-col items-center justify-center">
+                <div className="text-lg font-semibold text-gray-700 mb-2">
                   You have 0 panels
                 </div>
-                <div>
+                <div className="text-gray-500">
                   Why don't you make a new one?
                 </div>
               </div>
