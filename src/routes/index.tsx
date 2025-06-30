@@ -9,7 +9,7 @@ import Dashboard from '@/pages/dashboard';
 import Feed from '@/pages/feed';
 import Questions from '@/pages/question';
 import Panels from '@/pages/panels';
-import Groups from '@/pages/groups';
+import Groups from '@/pages/all-teams';
 import People from '@/pages/people';
 import Integrations from '@/pages/integrations';
 import CompanyProfile from '@/pages/company-profile';

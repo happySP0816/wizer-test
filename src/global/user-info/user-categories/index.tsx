@@ -59,16 +59,16 @@ const UserCategories: React.FC<UserCategoriesProps> = ({ userId }) => {
       <CardContent className="p-2">
         <div className="flex flex-wrap gap-2">
           {userCategories.length > 0 && (
-            userCategories?.slice(0, 3)?.map(category => (
-              <div key={category.id} className='px-4 py-[7.5px] bg-[#42346B] rounded-4xl'>
+            userCategories?.slice(0, 3)?.map((category, idx) => (
+              <div key={`user-${category.id ?? idx}`} className='px-4 py-[7.5px] bg-[#42346B] rounded-4xl'>
                 <span>{category.category.icon}</span>
                 <Typography className='text-[10px] font-semibold text-white'>{category.category.title}</Typography>
               </div>
             ))
           )}
           {endorsedCategory?.length > 0 && (
-            endorsedCategory?.slice(0, 3)?.map((category: any) => (
-              <div key={category.id} className=''>
+            endorsedCategory?.slice(0, 3)?.map((category: any, idx: number) => (
+              <div key={`endorsed-${category.id ?? idx}`} className=''>
                 <span>{category.category.icon}</span>
                 <Typography className='text-[10px] font-semibold text-white'>{category.category.title}</Typography>
               </div>
