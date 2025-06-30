@@ -1,14 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/components/ui/button'
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/components/ui/dialog'
 import { Typography } from '@/components/components/ui/typography'
-import { getAllPostForFeed, getFetchPostId } from '@/apis/dashboard'
 import type { Invite, Post } from '@/apis/dashboard'
-import YourDecisionMaking from '@/global/dashboard/YourDecisionMaking'
 import authRoute from '@/authentication/authRoute'
 import { getDecisionHubPost, getDecisionHubPostAdmin, getDecisionHubPostListing, getDecisionHubPostListingAdmin, getDecisionHubTopic } from '@/apis/decision-hub'
-import { Badge } from '@/components/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/components/ui/avatar'
 import CompleteQuestion from './complete-question'
 import { getNumberOfDaysLeft } from '@/helper'
 import {
@@ -21,11 +16,12 @@ import {
   PaginationPrevious,
 } from "@/components/components/ui/pagination"
 import DecisionHubQuestion from './create/decision-hub-question'
-import { Box } from 'lucide-react'
 import DecisionHubQuestionType from './create/decision-hub-question-type'
 import DecisionHubYesOrNo from './create/decision-hub-yes-or-no'
 import DecisionHubOpenEnded from './create/decision-hub-open-ended'
-import DecisionHubMultipleChoice from './create/decision-hub-multiple-choice'
+import DecisionHubTopics from './create/decision-hub-topics'
+import DecisionHubDuration from './create/decision-hub-duration'
+import DecisionHubSelectCrowd from './create/decision-hub-select-crowd'
 
 type UserProfileType = {
   username: string;
@@ -73,6 +69,8 @@ interface DecisionTopic {
 }
 
 const Question: React.FC<DashboardProps> = (props) => {
+  const orgId = Number(props.user.small_decision.organization_id)
+
   const [pageLoading, setPageLoading] = useState(false)
   const [isWizerOpen, setIsWizerOpen] = useState(false)
   const [isOrganizationOpen, setIsOrganizationOpen] = useState(false)
@@ -85,6 +83,13 @@ const Question: React.FC<DashboardProps> = (props) => {
   const [page, setPage] = useState(1)
   const postsPerPage = 12
 
+
+  
+  const [selectedCrowdPreview, setselectedCrowdPreview] = useState('')
+  const [selecteddecisionCrowds, setdecisionCrowds] = useState('')
+  const [selectedPeopleReview, setSelectedPeopleReview] = useState('')
+  const [strengthReview, setStrengthReview] = useState('')
+
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const [showCreateQuestion, setShowCreateQuestion] = useState<boolean>(false)
   const [activeStep, setActiveStep] = useState<number>(0)
@@ -93,7 +98,12 @@ const Question: React.FC<DashboardProps> = (props) => {
     description: '',
     questionType: '',
     options: [],
-    medias: []
+    medias: [],
+    categoryId: null,
+    duration: 0,
+    organizationId: Number(orgId),
+    invites: [],
+    DecisionHubCrowd_invites: []
   })
 
   const setResetQuestionData = () => {
@@ -102,7 +112,12 @@ const Question: React.FC<DashboardProps> = (props) => {
       description: '',
       questionType: '',
       options: [],
-      medias: []
+      medias: [],
+      categoryId: null,
+      duration: 0,
+      organizationId: 0,
+      invites: [],
+      DecisionHubCrowd_invites: []
     })
   }
 
@@ -183,14 +198,6 @@ const Question: React.FC<DashboardProps> = (props) => {
   }
 
   const componentMap = {
-    multiple_choice: (
-      <DecisionHubMultipleChoice
-        selectedImage={selectedImage}
-        setSelectedImage={setSelectedImage}
-        questionData={questionData}
-        setQuestionData={setQuestionData}
-      />
-    ),
     ranking: (<></>),
     open_ended: <DecisionHubOpenEnded />,
     yes_or_no: <DecisionHubYesOrNo selectedImage={selectedImage} setSelectedImage={setSelectedImage} questionData={questionData} setQuestionData={setQuestionData} />
@@ -207,6 +214,12 @@ const Question: React.FC<DashboardProps> = (props) => {
           return questionData.medias && questionData.medias.length <= 0
         }
         return questionData.options.length <= 1
+      case 3:
+        return questionData.categoryId === null
+      case 4:
+        return questionData.duration === 0
+      case 5:
+        return questionData.invites.length === 0
     }
     return true
   }
@@ -219,6 +232,12 @@ const Question: React.FC<DashboardProps> = (props) => {
         return <DecisionHubQuestionType questionData={questionData} setQuestionData={setQuestionData} />
       case 2:
         return componentMap[questionData.questionType as keyof typeof componentMap]
+      case 3:
+        return <DecisionHubTopics questionData={questionData} setQuestionData={setQuestionData} />
+      case 4:
+        return <DecisionHubDuration questionData={questionData} setQuestionData={setQuestionData} />
+      case 5:
+        return <DecisionHubSelectCrowd questionData={questionData} setQuestionData={setQuestionData} user={props.user} setselectedCrowdPreview={setselectedCrowdPreview} setdecisionCrowds={setdecisionCrowds} setSelectedPeopleReview={setSelectedPeopleReview} setStrengthReview={setStrengthReview} />
       default:
         return 'Unknown step'
     }
@@ -375,7 +394,7 @@ const Question: React.FC<DashboardProps> = (props) => {
             </div>
             <div className='flex flex-col px-8 pb-[60px] gap-[45px]'>
               {activeStep > 0 &&
-                <div className='flex flex-col gap-4 bg-[#D7D2E7] rounded-[10px] p-4'>
+                <div className='flex flex-col gap-4 bg-[#D7D2E7] rounded-[10px] p-[30px]'>
                   <Typography variant="h3" className="font-bold text-black">
                     {questionData.question}
                   </Typography>

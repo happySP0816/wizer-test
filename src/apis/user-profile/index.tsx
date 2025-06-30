@@ -1,5 +1,5 @@
 import { type AxiosResponse } from 'axios'
-import customAxios from 'src/services/interceptor'
+import customAxios from '@/services/interceptor'
 
 export const getUserByUserName = async (username: string) => {
   try {

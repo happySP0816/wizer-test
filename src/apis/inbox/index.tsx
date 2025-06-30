@@ -1,4 +1,4 @@
-import customAxios from 'src/services/interceptor';
+import customAxios from '@/services/interceptor';
 
 export const fetchNotifications = async (): Promise<any> => {
   const response = await customAxios.get("/inbox");

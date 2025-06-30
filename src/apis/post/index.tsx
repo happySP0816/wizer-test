@@ -1,4 +1,4 @@
-import axios from 'src/services/interceptor'
+import axios from '@/services/interceptor'
 
 export const getGlobalPost = async (
   viewerid: number,

@@ -1,4 +1,4 @@
-import axios from 'src/services/interceptor'
+import axios from '@/services/interceptor'
 
 export const getCrowds = async () => {
   try {
@@ -13,7 +13,6 @@ export const getCrowds = async () => {
 }
 
 export const addCrowd = async (title: string, organizationId: string) => {
-  console.log("@@@@@", title, organizationId)
   const paylaod = {
     title: title,
     organizationId: Number(organizationId),

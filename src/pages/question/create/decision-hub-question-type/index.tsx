@@ -62,7 +62,7 @@ interface Props {
 }
 
 const DecisionHubQuestionType: FC<Props> = ({ questionData, setQuestionData }) => {
-  const { question, questionType } = questionData
+  const { questionType } = questionData
 
   const handleTypeSelection = (type: string) => {
     let options: any[] = []

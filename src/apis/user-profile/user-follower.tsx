@@ -1,4 +1,4 @@
-import customAxios from 'src/services/interceptor'
+import customAxios from '@/services/interceptor'
 
 export const getFollowers = async (params: any = {}) => {
 
