@@ -31,6 +31,7 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
   const [invitePostData, setInvitePostData] = useState<Array<{ invite: Invite; post: Post | null }> | null>(null)
   const [timeOfDay, setTimeOfDay] = useState('')
   const [iconUrl, setIconUrl] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const currentTime = new Date().getHours()
@@ -47,6 +48,7 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
   }, [])
 
   const notificationCount = useCallback(async () => {
+    setIsLoading(true)
     const postIds = new Set()
     try {
       const response = await getFetchPostId(35)
@@ -82,6 +84,8 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
       setInvitePostData(organizedData)
     } catch (error) {
       // console.error('Error fetching postIds:', error)
+    } finally {
+      setIsLoading(false)
     }
   }, [getFetchPostId, getAllPostForFeed])
 
@@ -97,7 +101,7 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
         <Typography className="flex items-center text-4xl font-bold">
           {iconUrl && <img src={iconUrl} alt="time" className="w-8 h-8 mr-4" />}
           Good {timeOfDay},{' '}
-          <span className="font-bold">{props.userProfile?.username || 'User'}</span>
+          <span className="font-bold">&nbsp;{props.userProfile?.name || 'User'}</span>
         </Typography>
         <div className="flex gap-2">
           <Button className='bg-[#0084CE] hover:bg-[#0084CE]/90 rounded-4xl' onClick={() => setIsWizerOpen(true)}>
@@ -123,7 +127,11 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
               NOTIFICATION FEED
             </Typography>
             <div className='flex flex-col gap-2.5'>
-              {invitePostData && totalNotifcations && totalNotifcations.length > 0 ? (
+              {isLoading ? (
+                <div className="flex justify-center items-center py-8">
+                  <span>Loading...</span>
+                </div>
+              ) : invitePostData && totalNotifcations && totalNotifcations.length > 0 ? (
                 invitePostData.map(({ invite, post }) => {
                   const feedPostId = post?.id
                   const notificationId = invite?.id
@@ -145,7 +153,11 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
                   )
                 })
               ) : (
-                <></>
+                <div className="flex justify-center items-center py-8">
+                  <Typography variant='h5' className='text-black text-center'>
+                    You are all caught up.
+                  </Typography>
+                </div>
               )}
             </div>
           </div>
@@ -155,7 +167,7 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
           {props.userProfile && (
             <div className="bg-white rounded-lg border p-4 flex flex-col items-center justify-center relative gap-9">
               <UserProfile image={props.userProfile.image} name={props.userProfile.name} bio={props.userProfile.bio} />
-              <UserCategories userId={props.userProfile.id}/>
+              <UserCategories userId={props.userProfile.id} />
               <UserProfileStats
                 numberOfPosts={props.userProfile.numberOfPosts}
                 numberOfFollowers={props.userProfile.numberOfFollowers}

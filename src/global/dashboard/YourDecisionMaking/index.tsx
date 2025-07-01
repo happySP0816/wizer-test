@@ -97,7 +97,7 @@ const YourDecisionMaking: React.FC<YourDecisionMakingProps> = ({ userProfile }) 
               </div>
               <div className='flex-1 pl-2.5 pr-5 py-[12.5px]'>
                 <div 
-                  className="text-[#2D3648] text-sm font-normal"
+                  className="text-[#2D3648] text-sm font-medium"
                   dangerouslySetInnerHTML={{ __html: profileDescriptions[scores['profiletype']] }} 
                 />
               </div>

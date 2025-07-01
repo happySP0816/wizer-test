@@ -18,6 +18,7 @@ import CreatePost from '@/pages/create-post';
 import AddMembersPanel from '@/pages/panels/add-members';
 import AddMembersGroup from '@/pages/groups/add-members';
 import AllPeople from '@/pages/all-people';
+import DecisionProfileReport from '@/pages/dashboard/decision-profile-report';
 
 const AppRoutes = () => (
   <Router>
@@ -27,6 +28,7 @@ const AppRoutes = () => (
       <Route path="/reset-password" element={<ResetPass />} />
       <Route element={<SidebarLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/decision-profile-report" element={<DecisionProfileReport />} />
         <Route path="/feed" element={<Feed />} />
         <Route path="/ask-new-question" element={<Questions />} />
         <Route path="/panels" element={<Panels />} />

@@ -46,6 +46,7 @@ const authRoute = <P extends AuthRouteProps>(Component: ComponentType<P>) => {
               const userPersonalityQuestion = await getUserPersonalityQuestions()
               const UserProfile = (res as any).data.user
               const response = await getUserRoles()
+              console.log("ddd",response)
               setUser(response)
               setUserProfile(UserProfile)
               setAuthenticated(true)

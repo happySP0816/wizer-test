@@ -144,6 +144,7 @@ export const getUserRoles = async (): Promise<any> => {
   }
   try {
     const data = await getMembershipDetail(payload)
+    console.log("data",data)
     const resData: Record<string, any> = {};
     for (const key in data) {
       // // console.log('key', key)
