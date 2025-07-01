@@ -118,7 +118,7 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
       )}
       {/* Sidebar */}
       <aside
-        className={`w-60 color-white flex flex-col justify-between pt-4 pb-1 h-screen z-130 bg-[#7b69af] box-shadow-[2px_0_16px_rgba(0,0,0,0.10)] transition-left duration-300 ${isMobile ? 'fixed' : 'fixed'} ${isMobile ? isSidebarOpen ? 'left-0' : 'left-[-260px]' : 'left-0'}`}
+        className={`w-60 color-white flex flex-col justify-between pt-4 pb-1 h-screen bg-[#7b69af] box-shadow-[2px_0_16px_rgba(0,0,0,0.10)] transition-left duration-300 ${isMobile ? 'fixed' : 'fixed'} ${isMobile ? isSidebarOpen ? 'left-0' : 'left-[-260px]' : 'left-0'}`}
       >
         <div className='relative text-center mb-8'>
           <div className='font-bold text-4xl tracking-2 text-white'>wizer</div>

@@ -78,7 +78,9 @@ export const getOrganizationMembers = async (organizationId: number): Promise<an
 }
 
 export const createDecisionHubPost = async (postData: any) => {
+  console.log("#############", 1)
   const response = await axios.post('/posts', postData)
+  console.log("#############", response)
 
   return response.data
 }
