@@ -259,6 +259,7 @@ const Question: React.FC<DashboardProps> = (props) => {
 
       // Prepare the data for submission
       const submissionData = { ...questionData }
+      console.log("sdfsdfsdf",submissionData)
 
       // Clean up empty medias field
       if (submissionData['medias'] === '' || submissionData['medias'] === null || submissionData['medias'] === undefined || submissionData['medias'].length === 0) {

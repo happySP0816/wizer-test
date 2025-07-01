@@ -1,0 +1,116 @@
+import React, { useEffect, useRef } from "react";
+import Chart from "chart.js/auto";
+// import { bubbleChartData } from "../../utils/ChartData.ts.old";
+import { colorMapping } from "../../utils/colorMapping";
+
+type BubbleChartProps = {
+    view: string; // "Internal" | "External" | "All"
+};
+
+const BubbleChart: React.FC<BubbleChartProps> = ({ view }) => {
+    const chartRef = useRef<HTMLCanvasElement | null>(null);
+    const chartInstanceRef = useRef<Chart | null>(null);
+
+    useEffect(() => {
+        if (!chartRef.current) return;
+
+        // Destroy previous chart instance before re-creating it
+        if (chartInstanceRef.current) {
+            chartInstanceRef.current.destroy();
+        }
+
+        const ctx = chartRef.current.getContext("2d");
+        if (!ctx) return;
+
+        // Filter data based on selected view
+        const filteredData = view === "All" ? bubbleChartData : bubbleChartData.filter((d) => d.view === view);
+
+        // Get max participant count for scaling bubble size
+        const maxSize = Math.max(...filteredData.map((d) => d.participantCount));
+
+        chartInstanceRef.current = new Chart(ctx, {
+            type: "bubble",
+            data: {
+                datasets: filteredData.map((group) => ({
+                    label: group.label,
+                    data: [
+                        {
+                            x: group.panelParticipation,
+                            y: group.votingParticipation,
+                            r: (group.participantCount / maxSize) * 40, // Normalize bubble size
+                        },
+                    ],
+                    borderColor: colorMapping[group.label] || "#CCC",
+                    backgroundColor: `${colorMapping[group.label] || "#CCC"}80`, // Semi-transparent
+                    borderWidth: 2,
+                })),
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }, // ✅ Remove top legend
+                    tooltip: { enabled: true },
+                },
+                scales: {
+                    x: {
+                        type: "linear",
+                        position: "bottom",
+                        title: {
+                            display: true,
+                            text: "Panel Participation",
+                            font: { size: 14, weight: "bold" },
+                        },
+                        min: 0,
+                        max: 100,
+                        grid: {
+                            // drawBorder: true, // ✅ Ensure border is drawn
+                            drawTicks: false, // ✅ Hide default ticks
+                            lineWidth: (context) => (context.tick.value === 50 ? 1 : 0), // ✅ Only draw middle vertical grid line
+                            color: (context) => (context.tick.value === 50 ? "#000" : "transparent"),
+                        },
+                        ticks: {
+                            display: true,
+                            callback: (value) => (value === 0 ? "Low →" : value === 100 ? "High" : ""), // ✅ Only one "Low" with an arrow
+                            font: { size: 12, weight: "bold" },
+                        },
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: "Voting Participation",
+                            font: { size: 14, weight: "bold" },
+                        },
+                        min: 0,
+                        max: 100,
+                        grid: {
+                            // drawBorder: true, // ✅ Ensure border is drawn
+                            drawTicks: false, // ✅ Hide default ticks
+                            lineWidth: (context) => (context.tick.value === 50 ? 1 : 0), // ✅ Only draw middle horizontal grid line
+                            color: (context) => (context.tick.value === 50 ? "#000" : "transparent"),
+                        },
+                        ticks: {
+                            display: true,
+                            callback: (value) => (value === 0 ? "↑" : value === 100 ? "High" : ""), // ✅ "Low" with an upward arrow
+                            font: { size: 12, weight: "bold" },
+                        },
+                    },
+                },
+            },
+        });
+
+        return () => {
+            if (chartInstanceRef.current) {
+                chartInstanceRef.current.destroy();
+            }
+        };
+    }, [view]);
+
+    return (
+        <div style={{ width: "100%", height: "400px", position: "relative" }}>
+            <canvas ref={chartRef}></canvas>
+        </div>
+    );
+};
+
+export default BubbleChart;

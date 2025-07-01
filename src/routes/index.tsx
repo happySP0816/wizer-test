@@ -17,6 +17,7 @@ import Posts from '@/pages/posts';
 import CreatePost from '@/pages/create-post';
 import AddMembersPanel from '@/pages/panels/add-members';
 import AddMembersGroup from '@/pages/groups/add-members';
+import AllPeople from '@/pages/all-people';
 
 const AppRoutes = () => (
   <Router>
@@ -32,7 +33,7 @@ const AppRoutes = () => (
         <Route path="/panels/add-members" element={<AddMembersPanel />} />
         <Route path="/groups" element={<Groups />} />
         <Route path="/groups/add-members" element={<AddMembersGroup />} />
-        <Route path="/people" element={<People />} />
+        <Route path="/people" element={<AllPeople />} />
         <Route path="/integrations" element={<Integrations />} />
         <Route path="/company-profile" element={<CompanyProfile />} />
         <Route path="/posts" element={<Posts />} />

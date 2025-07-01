@@ -1,0 +1,9 @@
+export const profileDescriptions: Record<string, string> = {
+    Analyzer: `Analyzers are logical thinkers who prioritize accuracy and evidence. They excel in roles that demand critical evaluation and a structured approach to problem-solving, relying on data to make informed, precise decisions.`,
+    Collaborator: `Collaborators are team players who prioritize relationships and harmony in decision-making. They are skilled at fostering consensus and excel in roles where interpersonal dynamics and collaboration are essential.`,
+    Guardian: `Guardians are vigilant decision-makers who focus on assessing and mitigating risk. They excel in roles that require caution, forethought, and a strong focus on reliable, secure outcomes.`,
+    Explorer: `Explorers are adept at identifying and surfacing options, thriving in dynamic environments where they can assess a variety of pathways and solutions. They bring flexibility and adaptability to decision-making, looking at diverse perspectives to broaden potential outcomes.`,
+    Visionary: `Visionaries are imaginative and future-focused, excelling in roles that require innovation and strategic foresight. They thrive in environments that encourage creativity, using their high openness to bring transformative ideas and inspire others toward ambitious goals.`,
+    Achiever: `Achievers are results-focused, driving decisions toward successful outcomes. They excel in roles that require goal-setting, execution, and a commitment to efficiency, focusing on delivering tangible, measurable results.`,
+    Deliverer: `Deliverers bring deep expertise and a structured approach to decision-making. Focused on precision and detail, they excel in roles that require a thorough, systematic approach, ensuring that decisions are based on technical understanding and procedural integrity.`
+}

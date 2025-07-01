@@ -78,11 +78,14 @@ export const getOrganizationMembers = async (organizationId: number): Promise<an
 }
 
 export const createDecisionHubPost = async (postData: any) => {
-  console.log("#############", 1)
-  const response = await axios.post('/posts', postData)
-  console.log("#############", response)
-
-  return response.data
+  try {
+    const response = await axios.post('/posts', postData)
+    console.log("sdfsdfsdfsdfsdfsdf", response)
+    return response.data
+  } catch (error) {
+    console.error('Error creating decision hub post:', error)
+    throw error
+  }
 }
 
 export const getDecisionHubCrowdStrength = async (params: any) => {
