@@ -164,7 +164,7 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
                     }}>{section.section}</div>
                     {section.items.map((item) => {
                       const Icon = WizerIconMap[item.icon];
-                      const isActive = location.pathname === item.route;
+                      const isActive = location.pathname.includes(item.route);
                       return (
                         <div
                           key={item.label}

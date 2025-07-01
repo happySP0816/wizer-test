@@ -9,12 +9,14 @@ import Dashboard from '@/pages/dashboard';
 import Feed from '@/pages/feed';
 import Questions from '@/pages/question';
 import Panels from '@/pages/panels';
-import Groups from '@/pages/all-teams';
+import Groups from '@/pages/groups';
 import People from '@/pages/people';
 import Integrations from '@/pages/integrations';
 import CompanyProfile from '@/pages/company-profile';
 import Posts from '@/pages/posts';
 import CreatePost from '@/pages/create-post';
+import AddMembersPanel from '@/pages/panels/add-members';
+import AddMembersGroup from '@/pages/groups/add-members';
 
 const AppRoutes = () => (
   <Router>
@@ -27,7 +29,9 @@ const AppRoutes = () => (
         <Route path="/feed" element={<Feed />} />
         <Route path="/ask-new-question" element={<Questions />} />
         <Route path="/panels" element={<Panels />} />
+        <Route path="/panels/add-members" element={<AddMembersPanel />} />
         <Route path="/groups" element={<Groups />} />
+        <Route path="/groups/add-members" element={<AddMembersGroup />} />
         <Route path="/people" element={<People />} />
         <Route path="/integrations" element={<Integrations />} />
         <Route path="/company-profile" element={<CompanyProfile />} />

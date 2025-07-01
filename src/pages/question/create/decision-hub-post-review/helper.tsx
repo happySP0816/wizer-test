@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 export const useExpirationInfo = (durationInSeconds: number): string | null => {
     const [expirationInfo, setExpirationInfo] = useState<string | null>(null);

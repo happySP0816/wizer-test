@@ -22,7 +22,6 @@ const DecisionHubSelectPanel: FC<any> = ({ selectedCrowds, setSelectedCrowds, us
     const [isLoadingCrowds, setIsLoadingCrowds] = useState(false)
     const [isSearchingCrowds, setIsSearchingCrowds] = useState(false)
     const [isCreatingPanel, setIsCreatingPanel] = useState(false)
-    const [isSearchingPeople, setIsSearchingPeople] = useState(false)
 
     useEffect(() => {
         getAllCrowd()
@@ -250,21 +249,12 @@ const DecisionHubSelectPanel: FC<any> = ({ selectedCrowds, setSelectedCrowds, us
                                     placeholder="Start searching..."
                                     className="w-full border-b border-gray-300 rounded-none px-0 py-1 text-base border-t-0 border-x-0 border-b-primary focus-visible:ring-0 focus:border-primary pr-8"
                                 />
-                                {isSearchingPeople ? (
-                                    <Loader2 className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 animate-spin" />
-                                ) : (
-                                    <Search className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                                )}
+                                <Search className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                             </div>
                         </div>
 
                         <div className="mt-4 max-h-96 overflow-y-auto">
-                            {isSearchingPeople ? (
-                                <div className="flex items-center justify-center py-8">
-                                    <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
-                                    <Typography variant="body2" className="ml-2 text-gray-500">Searching people...</Typography>
-                                </div>
-                            ) : filteredPeople.length > 0 ? (
+                            {filteredPeople.length > 0 ? (
                                 filteredPeople.map((person: any) => (
                                     <div
                                         key={person.user}

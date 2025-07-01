@@ -22,4 +22,4 @@ const DecisionHubTitleCard: React.FC<DecisionHubTitleCardProps> = ({ title, subT
   );
 };
 
-export default DecisionHubTitleCard; 
+export default DecisionHubTitleCard;

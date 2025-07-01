@@ -1,4 +1,4 @@
-import { type FC, Fragment, memo, useEffect, useState } from 'react'
+import { type FC, memo, useEffect, useState } from 'react'
 import { getDecisionHubTopic } from '@/apis/decision-hub'
 import { Typography } from '@/components/components/ui/typography'
 import { Badge } from '@/components/components/ui/badge'

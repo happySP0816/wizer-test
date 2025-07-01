@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/components/ui/button'
 import { Typography } from '@/components/components/ui/typography'
-import type { Invite, Post } from '@/apis/dashboard'
 import authRoute from '@/authentication/authRoute'
 import { createDecisionHubPost, getDecisionHubPost, getDecisionHubPostAdmin, getDecisionHubPostListing, getDecisionHubPostListingAdmin, getDecisionHubTopic } from '@/apis/decision-hub'
 import { toast } from 'sonner'
@@ -28,6 +27,7 @@ import DecisionHubPostPreview from './create/decision-hub-post-review'
 import { Dialog, DialogContent } from "@/components/components/ui/dialog"
 import { Loader2 } from "lucide-react"
 import DecisionHubPostTotalPreview from './create/decision-hub-post-review/view'
+import type { DecisionCrowd, SelectedPerson } from './create/decision-hub-post-review/types'
 
 type UserProfileType = {
   username: string;
@@ -79,25 +79,18 @@ const Question: React.FC<DashboardProps> = (props) => {
   const navigate = useNavigate()
 
   const [pageLoading, setPageLoading] = useState(false)
-  const [isWizerOpen, setIsWizerOpen] = useState(false)
-  const [isOrganizationOpen, setIsOrganizationOpen] = useState(false)
-  const [invitePostData, setInvitePostData] = useState<Array<{ invite: Invite; post: Post | null }> | null>(null)
-  const [timeOfDay, setTimeOfDay] = useState('')
-  const [iconUrl, setIconUrl] = useState('')
   const [livePostList, setLivePostList] = useState<DecisionPost[]>([])
   const [closedPostList, setClosedPostList] = useState<DecisionPost[]>([])
   const [decisionTopics, setDecisionTopics] = useState<DecisionTopic[]>([])
   const [page, setPage] = useState(1)
   const postsPerPage = 12
 
-
-  const [submitBtn, setSubmitBtn] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
 
-  const [selectedCrowdPreview, setselectedCrowdPreview] = useState('')
-  const [selecteddecisionCrowds, setdecisionCrowds] = useState('')
-  const [selectedPeopleReview, setSelectedPeopleReview] = useState('')
+  const [selectedCrowdPreview, setselectedCrowdPreview] = useState<string[]>([])
+  const [selecteddecisionCrowds, setdecisionCrowds] = useState<DecisionCrowd[]>([])
+  const [selectedPeopleReview, setSelectedPeopleReview] = useState<SelectedPerson[]>([])
   const [strengthReview, setStrengthReview] = useState('')
 
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
@@ -210,7 +203,7 @@ const Question: React.FC<DashboardProps> = (props) => {
   const componentMap = {
     ranking: (<></>),
     open_ended: <DecisionHubOpenEnded />,
-    yes_or_no: <DecisionHubYesOrNo selectedImage={selectedImage} setSelectedImage={setSelectedImage} questionData={questionData} setQuestionData={setQuestionData} />
+    yes_or_no: <DecisionHubYesOrNo selectedImage={selectedImage as File} setSelectedImage={setSelectedImage} questionData={questionData} setQuestionData={setQuestionData} />
   }
 
   const validateFormData = () => {
@@ -243,12 +236,11 @@ const Question: React.FC<DashboardProps> = (props) => {
       visibility: 'decision_hub'
     })
     setActiveStep(0)
-    setselectedCrowdPreview('')
-    setdecisionCrowds('')
-    setSelectedPeopleReview('')
+    setselectedCrowdPreview([])
+    setdecisionCrowds([])
+    setSelectedPeopleReview([])
     setSelectedImage(null)
     setStrengthReview('')
-    setSubmitBtn(false)
   }
 
   const submitFormDataToAPI = async () => {
@@ -298,7 +290,6 @@ const Question: React.FC<DashboardProps> = (props) => {
       if (response?.post) {
         sessionStorage.removeItem('selectedMedia')
         sessionStorage.removeItem('selectedMembers')
-        setSubmitBtn(true)
 
         toast.success('Question posted successful!', {
           description: 'Your question has been successfully posted.',
@@ -420,7 +411,7 @@ const Question: React.FC<DashboardProps> = (props) => {
                 </Typography>
                 <div className='flex flex-col gap-2.5'>
                   {livePostList.length !== 0 ? (
-                    currentPosts.map((item, key) => {
+                    currentPosts.map((item) => {
                       const {
                         post: { owner, categoryId, createdAt, question, description, id, closed, expiresAt }
                       } = item
@@ -457,7 +448,7 @@ const Question: React.FC<DashboardProps> = (props) => {
                 </Typography>
                 <div className='flex flex-col gap-2.5'>
                   {closedPostList.length !== 0 ? (
-                    currentClosedPosts.map((item, key) => {
+                    currentClosedPosts.map((item) => {
                       const {
                         post: { owner, categoryId, createdAt, question, description, id, closed }
                       } = item
@@ -602,13 +593,11 @@ const Question: React.FC<DashboardProps> = (props) => {
           <DecisionHubPostTotalPreview
             strengthReview={Number(strengthReview)}
             previewData={questionData}
-            topicTitle={findMatchingCategoryTitle(questionData.categoryId)}
             decisionCrowds={selecteddecisionCrowds}
             selectedCrowdPreview={selectedCrowdPreview}
             selectedPeopleReview={selectedPeopleReview}
-            selectedImage={selectedImage}
+            selectedImage={selectedImage as File}
             setActiveStep={setActiveStep}
-            setSubmitBtn={setSubmitBtn}
           />
           <div className="flex justify-between items-center pt-4 border-t border-gray-200">
             <Button

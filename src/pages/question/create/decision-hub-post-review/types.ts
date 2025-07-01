@@ -42,5 +42,4 @@ export interface DecisionHubPostTotalPreviewProps {
   selectedPeopleReview: SelectedPerson[];
   selectedImage: SelectedImage | File;
   setActiveStep: (step: number) => void;
-  setSubmitBtn: (enabled: boolean) => void;
 } 

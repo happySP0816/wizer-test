@@ -14,13 +14,11 @@ const subTitle = 'Review your question here and post when ready!';
 const DecisionHubPostTotalPreview: React.FC<DecisionHubPostTotalPreviewProps> = ({
   strengthReview,
   previewData,
-  topicTitle,
   decisionCrowds,
   selectedCrowdPreview,
   selectedPeopleReview,
   selectedImage,
   setActiveStep,
-  setSubmitBtn,
 }) => {
   const questionContentMap = {
     yes_or_no: <>Yes or No</>,
@@ -29,7 +27,7 @@ const DecisionHubPostTotalPreview: React.FC<DecisionHubPostTotalPreviewProps> = 
     open_ended: <>Open Ended</>
   };
 
-  const { question, description, questionType, medias, duration, options } = previewData;
+  const { question, description, questionType, duration, options } = previewData;
   const expirationInfo = useExpirationInfo(duration);
   
   // Type guard to check if selectedImage is a File
@@ -61,7 +59,7 @@ const DecisionHubPostTotalPreview: React.FC<DecisionHubPostTotalPreviewProps> = 
             <Typography variant="h4" className="text-lg font-medium text-gray-900">
               {questionContentMap[questionType] || <div>Unknown Question Type</div>}
             </Typography>
-            <EditPreviewButton onClick={() => { setActiveStep(1); setSubmitBtn(false); }} />
+            <EditPreviewButton onClick={() => { setActiveStep(1); }} />
           </div>
 
           {/* Options Review for Yes/No */}
@@ -79,7 +77,7 @@ const DecisionHubPostTotalPreview: React.FC<DecisionHubPostTotalPreviewProps> = 
                   ))}
                 </ul>
               </div>
-              <EditPreviewButton onClick={() => { setActiveStep(3); setSubmitBtn(false); }} />
+              <EditPreviewButton onClick={() => { setActiveStep(3); }} />
             </div>
           )}
 
@@ -116,7 +114,7 @@ const DecisionHubPostTotalPreview: React.FC<DecisionHubPostTotalPreviewProps> = 
                 <Typography variant="h4" className="text-lg font-medium text-gray-900">
                   Options:
                 </Typography>
-                <EditPreviewButton onClick={() => { setActiveStep(3); setSubmitBtn(false); }} />
+                <EditPreviewButton onClick={() => { setActiveStep(3); }} />
               </div>
               <div className="grid gap-4">
                 {selectedImage.image.map((item, id) => (
@@ -197,7 +195,7 @@ const DecisionHubPostTotalPreview: React.FC<DecisionHubPostTotalPreviewProps> = 
               </Typography>
               <StrengthMeter strength={strengthReview} />
             </div>
-            <EditPreviewButton onClick={() => { setActiveStep(5); setSubmitBtn(false); }} />
+            <EditPreviewButton onClick={() => { setActiveStep(5); }} />
           </div>
 
           {/* Panel and People Grid */}

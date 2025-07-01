@@ -1,5 +1,5 @@
 import { useEffect, useState, type FC } from 'react'
-import { getOrganizationMembers, postMemberPrediction } from '@/apis/decision-hub'
+import { getOrganizationMembers } from '@/apis/decision-hub'
 import { Button } from '@/components/components/ui/button'
 import { Typography } from '@/components/components/ui/typography'
 import { Input } from '@/components/components/ui/input'
