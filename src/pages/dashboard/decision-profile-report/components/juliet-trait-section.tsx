@@ -12,7 +12,7 @@ interface TraitSectionProps {
 
 const JulietTraitSection: React.FC<TraitSectionProps> = ({ scores, selectedTrait, setSelectedTrait, type, median }) => {
   const [visibleIndex, setVisibleIndex] = useState<number>(-1);
-  const [animated, setAnimated] = useState(false);
+  const [, setAnimated] = useState(false);
 
   useEffect(() => {
     if (!scores || !scores[type]) return;

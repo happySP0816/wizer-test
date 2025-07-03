@@ -13,7 +13,6 @@ import {
   setUserHobbiesOrInterests,
   setUserProfession
 } from '@/apis/profile'
-import { Button } from '@/components/components/ui/button'
 import { Label } from '@/components/components/ui/label'
 import { Checkbox } from '@/components/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/components/ui/select'
@@ -35,8 +34,7 @@ const EditDiversity: React.FC<any> = ({ diversityData }) => {
   const [ethnicities, setEthnicities] = useState<string[]>([])
   const [hobbiesOrIntersts, setHobbiesOrIntersts] = useState<string[]>([])
 
-  // For error display
-  const isStatusFalse = false // Set this as needed from props or context
+  const isStatusFalse = false 
 
   const fetchAllEducations = async () => {
     const res = await getAllEducations()

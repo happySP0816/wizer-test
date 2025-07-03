@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { addTeam, getTeams, editTeam, deleteTeam } from '@/apis/teams'
-import { Progress } from '@/components/components/ui/progress'
 import { Input } from '@/components/components/ui/input'
 import authRoute from '@/authentication/authRoute'
 import { Button } from '@/components/components/ui/button'
@@ -45,7 +44,7 @@ const AllTeams: React.FC<PanelsProps> = (props) => {
   const [teamName, setTeamName] = useState<string>('')
   const [editingTeamId, setEditingTeamId] = useState<number | null>(null)
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [progress, setProgress] = useState(0)
+  const [, setProgress] = useState(0)
 
   const orgId = props.user.small_decision.organization_id
   const navigate = useNavigate()

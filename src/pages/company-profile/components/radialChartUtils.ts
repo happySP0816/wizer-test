@@ -83,7 +83,7 @@ export const calculateStraightLineCoordinates = (
   }
 }
 
-export const generateRadialPerformanceChartData = (questionsAsked: number) => {
+export const generateRadialPerformanceChartData = () => {
   const percentages = [33, 50, 100, 60, 87.5]
 
   return [

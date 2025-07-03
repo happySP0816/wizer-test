@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { editPassword } from '@/apis/profile'
 import { Input } from '@/components/components/ui/input'
-import { Button } from '@/components/components/ui/button'
 import { Label } from '@/components/components/ui/label'
 import { Progress } from '@/components/components/ui/progress'
 import { Eye, EyeOff } from "lucide-react"
@@ -12,7 +11,7 @@ interface ChangePasswordProps {
   email: string
 }
 
-const ChangePassword: React.FC<ChangePasswordProps> = (userProfile) => {
+const ChangePassword: React.FC<ChangePasswordProps> = () => {
   const [loading, setLoading] = useState(false)
   const [password, setPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -24,8 +23,6 @@ const ChangePassword: React.FC<ChangePasswordProps> = (userProfile) => {
   const [showPassword, setShowPassword] = useState(false)
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showNewConfirmPassword, setShowNewConfirmPassword] = useState(false)
-
-  const email = userProfile.email
 
   const validateNewPassword = () => {
     if (newPassword.length < 8) {
@@ -61,7 +58,6 @@ const ChangePassword: React.FC<ChangePasswordProps> = (userProfile) => {
     setLoading(false)
   }
 
-  // Password strength calculation
   function getPasswordStrength(pw: string) {
     let score = 0;
     if (pw.length >= 8) score += 1;

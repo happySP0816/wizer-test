@@ -4,9 +4,7 @@ import {
   getAllPersonalityQuestions,
   getUserPersonalityQuestions
 } from '@/apis/profile'
-import { Button } from '@/components/components/ui/button'
 import Loading from '@/components/loading'
-import { Input } from '@/components/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/components/components/ui/radio-group'
 import { toast } from "sonner"
 import LoadingButton from '@/components/components/ui/loading-button'
@@ -57,7 +55,6 @@ const EditPersonality: React.FC<any> = ({ expertiseData }) => {
 
   useEffect(() => {
     expertiseData(personalityQuestions)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [personalityQuestions])
 
   const handleRadioChange = (value: string, index: number) => {

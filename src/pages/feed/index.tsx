@@ -1,22 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { addTeam, getTeams, editTeam, deleteTeam } from '@/apis/teams'
-import { Progress } from '@/components/components/ui/progress'
-import { Input } from '@/components/components/ui/input'
 import authRoute from '@/authentication/authRoute'
-import { Button } from '@/components/components/ui/button'
-import LoadingButton from '@/components/components/ui/loading-button'
 import { Typography } from '@/components/components/ui/typography'
-import { WizerGroupIcon } from '@/components/icons'
-import { toast } from 'sonner'
-import { useNavigate } from 'react-router-dom'
-
-interface TeamData {
-  name: string
-  numberOfParticipants?: number
-  id?: number
-}
 
 type UserProfileType = {
+  name: string;
   username: string;
   id: number;
 }
@@ -34,7 +21,6 @@ interface PanelsProps {
 const Feed: React.FC<PanelsProps> = (props) => {
   const [timeOfDay, setTimeOfDay] = useState('')
   const [iconUrl, setIconUrl] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const currentTime = new Date().getHours()
@@ -54,7 +40,7 @@ const Feed: React.FC<PanelsProps> = (props) => {
     <div className="!h-screen p-[30px] flex flex-col gap-8">
       <div className="flex items-center justify-between flex-none">
         <div className='flex items-center justify-center'>
-        <Typography className="flex items-center text-4xl font-bold">
+          <Typography className="flex items-center text-4xl font-bold">
             {iconUrl && <img src={iconUrl} alt="time" className="w-8 h-8 mr-4" />}
             Good {timeOfDay},{' '}
             <span className="font-bold">&nbsp;{props.userProfile?.name || 'User'}</span>

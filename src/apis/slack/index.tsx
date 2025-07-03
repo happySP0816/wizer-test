@@ -36,8 +36,21 @@ export const slackGetAccessToken = async (payload: any): Promise<SlackResponse> 
       }
     }) 
     
-return response.data
+    return response.data
   } catch (error) {
-    return error
+    return {
+      ok: false,
+      app_id: '',
+      authed_user: { id: '', scope: '', access_token: '', token_type: '' },
+      scope: '',
+      token_type: '',
+      access_token: '',
+      bot_user_id: '',
+      team: { id: '', name: '' },
+      enterprise: null,
+      is_enterprise_install: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      userId: ''
+    }
   }
 }

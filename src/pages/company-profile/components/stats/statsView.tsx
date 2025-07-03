@@ -9,7 +9,7 @@ type StatsViewProps = {
   loading: boolean
 }
 
-const StatsView = ({ data, selectedTab, onTabChange, loading }: StatsViewProps) => {
+const StatsView = ({ data, selectedTab, onTabChange }: StatsViewProps) => {
   const currentTabData = data[selectedTab] || {}
   const summary = currentTabData.summary || {}
 

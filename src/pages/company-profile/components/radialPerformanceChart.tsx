@@ -34,18 +34,9 @@ const RadialPerformanceChart: React.FC<RadialPerformanceChartProps> = ({ data })
   const chartCenter = chartSize / 2
   const totalPercentage = 100
 
-  const labelPositions = [
-    { x: chartCenter + 130, y: chartCenter - 60 },
-    { x: chartCenter + 130, y: chartCenter + 60 },
-    { x: chartCenter - 130, y: chartCenter + 60 },
-    { x: chartCenter - 130, y: chartCenter - 60 },
-    { x: chartCenter + 130, y: chartCenter },
-    { x: chartCenter, y: chartCenter - 130 },
-  ]
-
   let cumulativeAngle = -Math.PI / 2
 
-  const segments = data.map((segment, index) => {
+  const segments = data.map((segment) => {
     const startAngle = cumulativeAngle
     const angle = (segment.percentage / totalPercentage) * 2 * Math.PI
     const endAngle = startAngle + angle

@@ -118,27 +118,15 @@ const PerformanceList: React.FC<PerformanceListProps> = ({ data }) => (
 const EngagedView: React.FC<EngagedViewProps> = props => {
   const [selectedTab, setSelectedTab] = useState<TabKeys>('Decision Profiles')
 
-  const data = [
-    { name: "A", value: 20, color: "#0088FE" },
-    { name: "B", value: 35, color: "#00C49F" },
-    { name: "C", value: 25, color: "#FFBB28" },
-    { name: "D", value: 15, color: "#FF8042" },
-    { name: "Treatment", value: 5, color: "#FF0000" },
-  ];
-
-  // Extract internal and external data arrays safely
   const internalData = props.donutData?.internal || [];
   const externalData = props.donutData?.external || [];
 
-  // Calculate total questions from both internal and external data
   const totalInternalQuestions = internalData.reduce((sum: number, item: any) => sum + item.value, 0);
   const totalExternalQuestions = externalData.reduce((sum: number, item: any) => sum + item.value, 0);
   const totalQuestions = totalInternalQuestions + totalExternalQuestions;
 
-  // Combine and aggregate data by category name
   const combinedCategories: { [key: string]: { name: string; value: number; color: string } } = {};
 
-  // Process internal data
   internalData.forEach((item: any) => {
     if (!combinedCategories[item.name]) {
       combinedCategories[item.name] = {

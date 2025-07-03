@@ -13,15 +13,7 @@ export interface Scores {
   juliet: Record<string, number>
   'big 5': Record<string, number>
   profiletype?: string
-  [key: string]: any // allow for extra fields like profiletype
-}
-
-interface DecisionProfileReportProps {
-  userProfile: {
-    userProfile: {
-      id: string
-    }
-  }
+  [key: string]: any 
 }
 
 const useDecisionProfile = (userId: string) => {
@@ -50,8 +42,6 @@ const useDecisionProfile = (userId: string) => {
 
 const DecisionProfileReport: React.FC<any> = ({ userProfile }) => {
   const { taken, errorTaken, scores } = useDecisionProfile(userProfile.id)
-  const [selectedTrait, setSelectedTrait] = useState<string>('Process')
-  const [selectedBigFiveTrait, setSelectedBigFiveTrait] = useState<string>('Extraversion')
   const navigate = useNavigate()
 
   const handleButtonClick = () => {

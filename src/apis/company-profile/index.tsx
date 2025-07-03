@@ -1,6 +1,6 @@
 import axios from 'src/services/interceptor'
 
-export const getCompanyReport = async (orgId): Promise<any> => {
+export const getCompanyReport = async (orgId:string): Promise<any> => {
   const response = await axios.get<any>(
     `/org_Dashboard/get/company/report?organizationId=${orgId}`
   )
@@ -16,7 +16,7 @@ export const getCompanyInsights = async (body: any): Promise<any> => {
   return response.data
 }
 
-export const getCompanyAnalyticsReport = async (orgId, timeframe): Promise<any> => {
+export const getCompanyAnalyticsReport = async (orgId:string, timeframe:any): Promise<any> => {
   const formattedTimeframe = timeframe === '' ? "All" : timeframe?.toLowerCase();
   const response = await axios.get<any>(
     `/org_Dashboard/get/company/analytics?organizationId=${orgId}&timeframe=${formattedTimeframe}`
@@ -25,7 +25,7 @@ export const getCompanyAnalyticsReport = async (orgId, timeframe): Promise<any> 
   return response.data
 }
 
-export const getCompanyDecisionReport = async (orgId): Promise<any> => {
+export const getCompanyDecisionReport = async (orgId:string): Promise<any> => {
   const response = await axios.get<any>(
     `/org_Dashboard/get/company/decision-report?organizationId=${orgId}`
   )
@@ -33,7 +33,7 @@ export const getCompanyDecisionReport = async (orgId): Promise<any> => {
   return response.data
 }
 
-export const getDeiWheel = async (orgId): Promise<any> => {
+export const getDeiWheel = async (orgId:string): Promise<any> => {
   const response = await axios.get<any>(
     `/org_Dashboard/get/organisation/diversity-data?organizationId=${orgId}`
   )

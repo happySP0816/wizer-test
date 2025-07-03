@@ -23,12 +23,12 @@ interface DecisionProfileTabsProps {
   profileDynamicDescriptions: any;
 }
 
-export const DecisionProfileTabs = ({ scores, traitDescriptions, profileDynamicDescriptions }: DecisionProfileTabsProps) => {
+export const DecisionProfileTabs = ({ scores, profileDynamicDescriptions }: DecisionProfileTabsProps) => {
   const [value, setValue] = useState(0);
   const [selectedTrait, setSelectedTrait] = useState<string>('Risks');
   const [selectedBigFiveTrait, setSelectedBigFiveTrait] = useState<string>('Imagination');
-  const [modalOpen, setModalOpen] = useState(false);
-  const [premiumAccess, setPremiumAccess] = useState(true);
+  const [, setModalOpen] = useState(false);
+  const [premiumAccess] = useState(true);
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
   const { topTrait, secondTrait } = getTopTwoTraits(scores['juliet'] || {});
@@ -67,7 +67,6 @@ export const DecisionProfileTabs = ({ scores, traitDescriptions, profileDynamicD
   useEffect(() => {
     const container = document.getElementById('main-content');
     const handleScroll = () => {
-      const scrollPosition = container?.scrollTop || 0;
       if (!content || !Array.isArray(content)) return;
       let activeId: string | null = null;
       (content as any[]).forEach((section: any) => {
@@ -202,7 +201,7 @@ export const DecisionProfileTabs = ({ scores, traitDescriptions, profileDynamicD
             <p className="text-center text-base mb-4 max-w-[75%]">This content is for subscribing organizations only (or a one-time fee for individuals)</p>
             <h3 className="text-xl font-bold text-center mb-4 max-w-[75%]">Continue reading for less than a cup of coffee (placeholder text)</h3>
             <p className="text-center text-base mb-4">Add message here that clearly communicates the benefits of upgrading, such as exclusive content or advanced features. Use bullet points or icons for easy scanning, and keep the messaging simple and user-focused.</p>
-            <Button onClick={() => {}} className="mt-2">unlock exclusive features</Button>
+            <Button onClick={() => { }} className="mt-2">unlock exclusive features</Button>
           </div>
         )}
       </div>
@@ -210,7 +209,7 @@ export const DecisionProfileTabs = ({ scores, traitDescriptions, profileDynamicD
       <div className="flex-shrink-0 pl-8 border-l border-gray-200 min-w-[240px] max-w-[320px]">
         <Typography variant="h6" className="mb-2 ml-6">Contents</Typography>
         <div className="flex flex-col gap-1 ml-6">
-          {Array.isArray(content) && content.map((section, index) => (
+          {Array.isArray(content) && content.map((section) => (
             <button
               key={section.id}
               className={`text-xs mb-1 text-left cursor-pointer ${activeSection === section.id ? 'text-purple-600 font-bold' : 'text-gray-600 font-normal'} hover:text-purple-600`}
@@ -235,7 +234,7 @@ export const DecisionProfileTabs = ({ scores, traitDescriptions, profileDynamicD
       <div className="bg-white rounded-lg shadow-none">
         <div className="flex gap-2 border-b border-gray-200 overflow-x-auto">
           {tabLabels.map((label, idx) => (
-            <Button 
+            <Button
               key={label}
               className={`h-[25px] cursor-pointer px-4 text-sm rounded-none rounded-t-xs font-medium transition-colors duration-700 ${value === idx ? 'bg-primary text-white font-semibold border' : 'bg-gray-200 text-gray-700'} hover:!text-white focus:!outline-none`}
               onClick={() => handleChange(idx)}

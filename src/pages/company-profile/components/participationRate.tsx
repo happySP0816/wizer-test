@@ -41,7 +41,7 @@ const ParticipationRate = ({ data }: ParticipationRateProps) => {
   }
 
   let cumulativeAngle = -Math.PI / 2;
-  const segments = filteredData.map((segment: ParticipationRateSegment, index: number) => {
+  const segments = filteredData.map((segment: ParticipationRateSegment) => {
     let path;
 
     if (filteredData.length === 1) {

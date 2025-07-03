@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from '@/pages/auth/login';
 import ResetPass from '@/pages/auth/resetPass';
 import Home from '@/pages/home';
-
 import SidebarLayout from '@/pages/layouts';
 import Dashboard from '@/pages/dashboard';
 import Feed from '@/pages/feed';

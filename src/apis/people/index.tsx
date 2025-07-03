@@ -94,12 +94,15 @@ export const userSignUpDecisionHub = async (
   }
   try {
     const response = await axios.post('/auth/signup', payload)
-
-    // const { user } = response.data
-    // if (user) {
-    // }
     return response.data
   } catch (error) {
-    return error
+    return {
+      result: null,
+      user: { username: '', email: '', id: '' },
+      error: {
+        errorCode: -1,
+        message: error instanceof Error ? error.message : 'Unknown error'
+      }
+    }
   }
 }

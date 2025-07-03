@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { Card } from '@/components/components/ui/card';
-import { Typography } from '@/components/components/ui/typography';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/components/ui/tabs';
 import ProfileTypesView from "./ProfileTypesView";
 import GroupDynamicsView from "./GroupDynamicsView";

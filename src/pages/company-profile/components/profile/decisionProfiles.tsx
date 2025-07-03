@@ -38,7 +38,7 @@ const DecisionProfilesDashboard: React.FC<DecisionProfilesDashboardProps> = ({ d
   };
 
   const renderLargestSliceLabel = (props: any) => {
-    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, payload } = props;
+    const { cx, cy, outerRadius, startAngle, endAngle, payload } = props;
     const midAngle = (startAngle + endAngle) / 2;
     const midAngleRad = RADIAN * midAngle;
     const largestSlice = formattedData.reduce((max, item) =>

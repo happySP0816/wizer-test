@@ -8,7 +8,7 @@ import { WizerTeamIcon } from '@/components/icons';
 import { Input } from '@/components/components/ui/input';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/components/ui/select';
 
-const AddNewPerson: React.FC<any> = (props) => {
+const AddNewPerson: React.FC<any> = () => {
   const navigate = useNavigate();
   const orgId = new URLSearchParams(window.location.search).get('organization_id');
   const userId = new URLSearchParams(window.location.search).get('userId');
@@ -22,7 +22,6 @@ const AddNewPerson: React.FC<any> = (props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const userName = personData.firstName + '_' + personData.lastName
-    const userRole = personData.role ? personData.role != 'team member' : 'user'
     const userExists = await userCheck(personData.email);
     if (userExists) {
       const res = await attachMember('external', Number(userExists), Number(orgId))

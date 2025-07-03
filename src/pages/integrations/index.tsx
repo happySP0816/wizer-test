@@ -1,42 +1,38 @@
 import React from 'react'
-import Integration from '@/pages/integrations/screens'; 
 import authRoute from '@/authentication/authRoute'
+import { Typography } from '@/components/components/ui/typography'
 
-interface userProfileprops {
+
+type UserProfileType = {
+  username: string;
   id: number;
 }
 
-interface slackintegrationProps {
-    code: string
-    userProfile: userProfileprops
-  }
+type MembershipType = {
+  small_decision: { organization_id: number };
+  member_role: string;
+}
 
-const IntegrationsPage: React.FC<slackintegrationProps> = ({ code, userProfile }: { code: string, userProfile: userProfileprops })  => {
- 
-  const titleStyle = {
-    margin: 'auto',
-    textAlign: 'center',
-    fontSize: 22
-  }
+interface PanelsProps {
+  userProfile: UserProfileType
+  user: MembershipType
+}
 
+const Integration: React.FC<PanelsProps> = () => {
   return (
-    
-    <Integration code={code} userProfile={userProfile} />
-  
+    <div className="!h-screen p-[30px] flex flex-col gap-8">
+      <div className="flex items-center justify-between flex-none">
+        <div className='flex items-center justify-center'>
+          <Typography className="flex items-center text-4xl font-bold">
+            Integration
+          </Typography>
+        </div>
+      </div>
+      <div className="p-6">
+        developing....
+      </div>
+    </div>
   )
-} 
-export async function getServerSideProps({ query, res }: { query: { code: string, state: string }, res: any }) {
-  
-    const { code, state } = query;
-   
-     if (!code || code === null ) {
-        return {
-          // Return an empty object if the code property is not set or is null.
-          props: {},
-        };
-      }
-    
-    return { props: { code  } };
-  }
+}
 
-export default authRoute(IntegrationsPage)
+export default authRoute(Integration)

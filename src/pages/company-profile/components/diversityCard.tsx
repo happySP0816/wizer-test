@@ -46,7 +46,7 @@ const DiversityCard = (data: any) => {
       percentage: parseFloat(item.percentage) || 0,
     }));
 
-    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name, percentage, payload }: any) => {
+    const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, name, percentage }: any) => {
       const roundedPercentage = Math.round(percentage);
       const key = `${roundedPercentage}-${title}`;
       if (displayedPercentages.current.has(key)) {
@@ -147,7 +147,7 @@ const DiversityCard = (data: any) => {
                   whiteSpace: 'pre-wrap', 
                   width: '250px', 
                 }}
-                formatter={(value: string, entry: any) => {
+                formatter={(value: string) => {
                   const item = formattedData.find((d: any) => d.name === value);
 
                   return <span style={{ color: '#000', fontSize: '12px' }}>{`${value} (${Math.round(item.percentage)}%)`}</span>;

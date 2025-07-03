@@ -17,11 +17,6 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/components/ui/select';
 import Loading from '@/components/loading'
 
-type UserProfileType = {
-    username: string
-    id: number
-}
-
 type MemberType = {
     organization_member_id: number
     user: number
@@ -35,11 +30,6 @@ type MemberType = {
     decisionProfileType: string
 }
 
-type Props = {
-    userProfile: UserProfileType // Use the defined UserProfileType
-    user: any
-}
-
 const People: React.FC<any> = (props) => {
 
     const navigate = useNavigate();
@@ -51,20 +41,9 @@ const People: React.FC<any> = (props) => {
     const [sortColumn, setSortColumn] = useState<string>('');
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
-    const handleChangePage = (event: unknown, newPage: number) => {
-        setPage(newPage)
-    }
-
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(+event.target.value)
-        setPage(0)
-    }
     const columns = ['Username', 'email', 'Group', 'Role', 'Status', 'Profile', 'Decision', 'Actions']
     const [members, setMembers] = useState<MemberType[]>([])
     const [loading, setLoading] = useState<boolean>(false)
-    const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
-    const [snackbarMessage, setSnackbarMessage] = useState<string>('')
-    const [severity, setSeverity] = useState<string>('success')
 
     const handleOpenDialog = (member: MemberType) => {
         setSelectedMember(member);
@@ -89,7 +68,7 @@ const People: React.FC<any> = (props) => {
                 setMembers(prevMembers => prevMembers.filter(member => member.user !== user));
                 toast.success('Member removed successfully.')
             })
-            .catch(error => {
+            .catch(() => {
                 toast.error('Failed to remove member.')
             });
     };
@@ -183,11 +162,6 @@ const People: React.FC<any> = (props) => {
             fileInputRef.current.value = '' // reset so same file can be selected again
             fileInputRef.current.click();
         }
-    }
-
-    const handleSelectRowsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setRowsPerPage(+event.target.value)
-        setPage(0)
     }
 
     const handleRoleChange = async (event: any, orgId: number, userId: number) => {

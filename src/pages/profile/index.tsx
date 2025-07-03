@@ -5,36 +5,24 @@ import EditDiversity from './components/edit-diversity'
 import EditUserDetails from './components/edit-user-detail'
 import EditPersonality from './components/edit-personality'
 import ChangePassword from './components/change-password'
-
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/components/ui/tabs'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { Typography } from '@/components/components/ui/typography'
 import { Button } from '@/components/components/ui/button'
 
-// import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
-
-interface UserProfileEditorProps {
-    userProfile: any
-    user: any
-}
-
-const Profile: React.FC<any> = (props) => {
-    const router = useNavigate()
+const Profile: FC<any> = (props) => {
     const location = useLocation()
     const params = new URLSearchParams(location.search)
     const status = params.get('status')
     const isStatusFalse = status === 'false'
 
     const [activeSection, setActiveSection] = useState('Edit Profile')
-    const [userDetailsError, setUserDetailsError] = useState(false)
-    const [categoryError, setCategoryError] = useState(false)
-    const [PersonalityError, setPersonalityError] = useState(false)
-    const [diversityError, setDiversityError] = useState(false)
+    const [, setUserDetailsError] = useState(false)
+    const [, setCategoryError] = useState(false)
+    const [, setPersonalityError] = useState(false)
+    const [, setDiversityError] = useState(false)
 
     useEffect(() => {
         if (status) {
-            // console.log('status',status)
-
             setActiveSection(String(status))
         }
     }, [status])
