@@ -19,7 +19,7 @@ import AddMembersGroup from '@/pages/groups/add-members';
 import DecisionProfileReport from '@/pages/dashboard/decision-profile-report';
 import Integrations from '@/pages/integrations';
 import Profile from '@/pages/profile';
-
+import UserinfoFromPopup from '@/pages/userinfo-from-popup';
 const AppRoutes = () => (
   <Router>
     <Routes>
@@ -42,6 +42,7 @@ const AppRoutes = () => (
         <Route path="/company-profile" element={<CompanyProfile />} />
         <Route path="/posts" element={<Posts />} />
         <Route path="/create-post" element={<CreatePost />} />
+        <Route path="/userInfo-form-popup" element={<UserinfoFromPopup />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

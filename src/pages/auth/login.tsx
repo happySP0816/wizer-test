@@ -5,6 +5,11 @@ import { signIn } from "@/apis/auth";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
+import { googleSignIn } from '@/apis/auth';
+import { logoutUser } from '@/apis/auth';
+import { getUserRoles } from "@/apis/auth";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -19,6 +24,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isPageLoading, setIsPageLoading] = useState(true);
+    const [redirectPath, setRedirectPath] = useState<string | null>(null);
 
     const isLoginFormValid = email.trim() !== '' && password.trim() !== '';
     const searchParams = new URLSearchParams(location.search);
@@ -80,6 +86,14 @@ const Login = () => {
             }
           }
           if (response.tokens) {
+            const roles = await getUserRoles();
+            let hasOrgId = false;
+            for (const key in roles) {
+              if (roles[key] && roles[key].organization_id && roles[key].organization_id !== 0) {
+                hasOrgId = true;
+                break;
+              }
+            }
             toast.success('Login successful! Redirecting to dashboard...', {
               duration: 3000,
               position: 'top-right',
@@ -89,8 +103,10 @@ const Login = () => {
                 color: '#fff',
               },
             });
-            if (redirect) {
-              navigate(redirect);
+            if (!hasOrgId) {
+              setRedirectPath('/dashboard');
+            } else if (redirect) {
+              setRedirectPath(redirect);
             }
           }
         } catch (error) {
@@ -99,6 +115,86 @@ const Login = () => {
           setIsLoading(false)
         }
     }
+
+    const googleLogin = useGoogleLogin({
+      onSuccess: async (credentialResponse) => {
+        if (!credentialResponse) {
+          toast.error('Google login failed: No credential received');
+          return;
+        }
+        setIsLoading(true);
+        try {
+          let userData: any = {};
+          if (credentialResponse.access_token) {
+            const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+              headers: { Authorization: `Bearer ${credentialResponse.access_token}` },
+            });
+            userData = await res.json();
+          }
+          if (!userData || !userData.email) {
+            toast.error('Google login failed: Unable to fetch user info');
+            setIsLoading(false);
+            return;
+          }
+          const response = await googleSignIn({
+            email: userData.email,
+            givenName: userData.given_name,
+            familyName: userData.family_name,
+            photo: userData.picture,
+            name: userData.name,
+            id: userData.sub,
+          });
+          if (response.error) {
+            if (response.error.message === 'User not registered' || response.error.message === 'User is not registered') {
+              toast.error('Your Google account is not registered. Please sign up or contact support.');
+              setIsLoading(false);
+              return;
+            }
+            toast.error('Google login failed.');
+            setIsLoading(false);
+            return;
+          } else if (response.tokens) {
+            const roles = await getUserRoles();
+            let hasOrgId = false;
+            for (const key in roles) {
+              if (roles[key] && roles[key].organization_id && roles[key].organization_id !== 0) {
+                hasOrgId = true;
+                break;
+              }
+            }
+            toast.success('Login successful! Redirecting to dashboard...', {
+              duration: 3000,
+              position: 'top-right',
+              icon: '🔑',
+              style: {
+                backgroundColor: '#000',
+                color: '#fff',
+              },
+            });
+            if (!hasOrgId) {
+              setRedirectPath('/dashboard');
+            } else if (redirect) {
+              setRedirectPath(redirect);
+            }
+          }
+        } catch (error) {
+          toast.error('Google login failed.');
+          console.error('Google login error:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      },
+      onError: () => {
+        toast.error('Google login failed.');
+      },
+      flow: 'implicit',
+    });
+
+    useEffect(() => {
+      if (redirectPath) {
+        navigate(redirectPath);
+      }
+    }, [redirectPath, navigate]);
 
     // Loading component
     const LoadingSpinner = () => (
@@ -164,20 +260,21 @@ const Login = () => {
                             ) : 'Login'}
                         </Button>
                         <span className="text-white">or</span>
-                        <Button className={`text-white w-full !border !border-white rounded-[3px] !h-10`}>Login with Google</Button>
+                        {/* Custom Google Login Button */}
+                        <button
+                          type="button"
+                          onClick={() => googleLogin()}
+                          className="w-full flex items-center justify-center h-12 rounded-md border-2 border-white bg-[#8B73B1] hover:bg-[#9c85c3] transition-colors font-bold text-white text-[1.25rem] leading-none"
+                          style={{ fontWeight: 700, fontSize: '1.25rem', borderRadius: 6 }}
+                          disabled={isLoading}
+                        >
+                          Login with Google
+                        </button>
                     </div>
                 </form>
             </div>
         )
     }
-}
-
-export const logoutUser = () => {
-  if (sessionStorage.getItem('token')) {
-    sessionStorage.removeItem('userId')
-    sessionStorage.removeItem('token')
-    localStorage.removeItem('token')
-  }
 }
 
 export default Login;

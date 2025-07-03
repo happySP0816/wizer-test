@@ -112,7 +112,7 @@ export const getAllPersonalityQuestions = async () => {
 export const getUserPersonalityQuestions = async () => {
   try {
     const response = await axios.get('users/personality')
-
+    console.log("sdfsdfsdf", response)
     return response.data
   } catch (error) {
     return false

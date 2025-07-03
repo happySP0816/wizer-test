@@ -1,8 +1,10 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import type { ComponentType } from 'react'
-import { checkCredential, getUserRoles } from '@/apis/auth'
+import { checkCredential, getUserRoles, googleSignIn } from '@/apis/auth'
 import { getUserPersonalityQuestions } from '@/apis/profile'
+import customAxios from '@/services/interceptor'
+import { jwtDecode } from 'jwt-decode'
 
 interface AuthRouteProps {
   user?: any
@@ -19,6 +21,9 @@ const authRoute = <P extends AuthRouteProps>(Component: ComponentType<P>) => {
     const [authenticated, setAuthenticated] = useState<boolean | null>(null)
     const [redirectUrl, setRedirectUrl] = useState<string | null>(null)
     const [, setUserPersonalityQuestion] = useState<any>()
+
+    const [, setProfile] = useState<any>(null)
+    const redirectTo = '/dashboard'
 
     useEffect(() => {
       const checkToken = async () => {
@@ -41,7 +46,6 @@ const authRoute = <P extends AuthRouteProps>(Component: ComponentType<P>) => {
               setAuthenticated(false)
               navigate(`/login?redirectTo=${encodeURIComponent(location.pathname)}`)
             }
-
             if ('data' in (res as any)) {
               const userPersonalityQuestion = await getUserPersonalityQuestions()
               const UserProfile = (res as any).data.user
@@ -63,13 +67,16 @@ const authRoute = <P extends AuthRouteProps>(Component: ComponentType<P>) => {
                   UserProfile.hobbiesOrInterests.length === 0 ||
                   userPersonalityQuestion.personalityQuestionsAnswers.length === 0
                 ) {
-                  return navigate('/userInfo-form-popup')
+                  // return navigate('/userInfo-form-popup')
+                  return navigate('/dashboard')
                 }
               }
             } else {
               throw new Error('Invalid response')
+              console.log("Auth Step 5");
             }
           } catch (error) {
+            console.log("Auth Step 6");
             sessionStorage.clear()
             localStorage.clear()
             setAuthenticated(false)
@@ -81,10 +88,54 @@ const authRoute = <P extends AuthRouteProps>(Component: ComponentType<P>) => {
       checkToken()
     }, [authenticated])
 
-    if (authenticated === null) {
-      navigate(`/login?redirectTo=${encodeURIComponent(redirectUrl || location.pathname)}`);
-    }
+    // if (authenticated === null) {
+    //   navigate(`/login?redirectTo=${encodeURIComponent(redirectUrl || location.pathname)}`);
+    // }
 
+    useEffect(() => {
+      async function getProfile() {
+        try {
+          if (user && user.access_token) {
+            const res = await customAxios.get<any>(
+              `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${user.access_token}`,
+                  Accept: 'application/json'
+                }
+              }
+            )
+            setProfile(res.data)
+            responseGoogle(res.data)
+          } else if (user && user.credential) {
+            const decoded = jwtDecode(user.credential)
+            setProfile(decoded)
+            responseGoogle(decoded)
+          }
+        } catch (error) {
+          // console.log(error)
+        }
+      }
+  
+        async function responseGoogle(response: any) {
+        const { id, email, family_name, given_name, name, picture } = response
+  
+        const userResponse = await googleSignIn({
+          id,
+          email: email || '.',
+          familyName: family_name || '.',
+          givenName: given_name || '.',
+          name: name ? name : `${given_name || ''} ${family_name || ''}`,
+          photo: picture || '.'
+        })
+        if (userResponse.tokens.accessToken) {
+          navigate(redirectTo)
+        }
+      }
+  
+      getProfile()
+    }, [user, navigate, redirectTo])
+ 
     if (authenticated) {
       return <Component {...props as P} user={user} authenticated={authenticated} userProfile={userProfile} />
     }

@@ -3,7 +3,7 @@ import { menuList } from './menu';
 import { WizerIconMap, WizerToptIcon } from '@/components/icons';
 import { Button } from '@/components/components/ui/button';
 import { useNavigate, useLocation, Outlet, Link } from 'react-router-dom';
-import { logoutUser } from '../auth/login';
+import { logoutUser } from '@/apis/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/components/ui/avatar';
 import authRoute from '@/authentication/authRoute';
 
@@ -22,11 +22,45 @@ interface UserProfileType {
 interface SidebarLayoutProps {
   userProfile?: UserProfileType
 }
-const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
+
+const SidebarLayout: React.FC<SidebarLayoutProps & { user?: any }> = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // --- ORG ID LOGIC ---
+  // Compute if user has any valid org id
+  let hasOrgId = false;
+  if (props.user) {
+    for (const key in props.user) {
+      if (
+        props.user[key] &&
+        typeof props.user[key].organization_id !== 'undefined' &&
+        props.user[key].organization_id !== 0
+      ) {
+        hasOrgId = true;
+        break;
+      }
+    }
+  }
+
+  // If no org id and not on dashboard, redirect to dashboard
+  React.useEffect(() => {
+    if (!hasOrgId && location.pathname !== '/dashboard') {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [hasOrgId, location.pathname, navigate]);
+
+  // Filter menu: only show Dashboard if no org id
+  const filteredMenuList = !hasOrgId
+    ? menuList.filter(section =>
+        section.items.some(item => item.route === '/dashboard')
+      ).map(section => ({
+        ...section,
+        items: section.items.filter(item => item.route === '/dashboard')
+      }))
+    : menuList;
 
   const getAvatarName = (username: string | undefined): string => {
     if (!username) return ''
@@ -123,6 +157,16 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
           <Link to="/dashboard">
             <div className='font-bold text-4xl tracking-2 text-white'>wizer</div>
           </Link>
+          <div
+            className='font-bold text-4xl tracking-2 text-white cursor-pointer'
+            onClick={() => navigate('/dashboard')}
+            role="button"
+            tabIndex={0}
+            onKeyPress={e => { if (e.key === 'Enter' || e.key === ' ') navigate('/dashboard'); }}
+            aria-label="Go to dashboard"
+          >
+            wizer
+          </div>
           {isMobile && (
             <div className='absolute right-4 top-1'>
               <Button
@@ -143,7 +187,7 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
             marginBottom: 16,
           }} className="sidebar-menu-scroll">
             <nav>
-              {menuList.map((section, sectionIdx) => {
+              {filteredMenuList.map((section, sectionIdx) => {
                 const isCommunity = section.section === 'COMMUNITY';
                 return (
                   <div key={section.section} style={{
