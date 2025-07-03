@@ -9,6 +9,7 @@ import { Search, UserPlus, Loader2, Star, Trash2 } from 'lucide-react'
 import authRoute from '@/authentication/authRoute'
 import LoadingButton from '@/components/components/ui/loading-button'
 import { addTeamParticipants, deleteTeamParticipant, getOrganizationMembersForTeam, getTeamParticipants } from '@/apis/teams'
+import { Checkbox } from '@/components/components/ui/checkbox'
 
 interface MembershipType {
     organization_id: number
@@ -28,7 +29,7 @@ interface IMember {
     isTeamLead?: boolean
 }
 
-const AddMembersGroup: React.FC<{user: MembershipType, userProfile: UserProfileType}> = (props) => {
+const AddMembersGroup: React.FC<{ user: MembershipType, userProfile: UserProfileType }> = (props) => {
     const [searchParams] = useSearchParams()
     const [teamTitle, setTeamTitle] = useState<string>('')
     const [teamId, setTeamId] = useState<string>('')
@@ -180,11 +181,10 @@ const AddMembersGroup: React.FC<{user: MembershipType, userProfile: UserProfileT
             }
             handleChangeSelected(member.id)
         }}>
-            <input
-                type="checkbox"
+            <Checkbox
                 checked={member.selected}
                 disabled={selectedMembers.some(m => m.id === member.id) || member.id === props.userProfile.id}
-                onChange={() => handleChangeSelected(member.id)}
+                onCheckedChange={() => handleChangeSelected(member.id)}
                 className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
             />
             <Typography variant="body1" className="text-base font-normal leading-6">
@@ -240,7 +240,6 @@ const AddMembersGroup: React.FC<{user: MembershipType, userProfile: UserProfileT
                             placeholder="Start searching..."
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setSearchQuery(e.target.value)
-                                console.log(searchedMembers)
                             }}
                             value={searchQuery}
                             className={`pr-10 ${searchQuery && searchedMembers.length ? 'rounded-b-none' : ''}`}
@@ -249,7 +248,7 @@ const AddMembersGroup: React.FC<{user: MembershipType, userProfile: UserProfileT
                         {searchQuery && searchedMembers.length > 0 && (
                             <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-b-md shadow-lg z-10 overflow-y-auto">
                                 {searchedMembers.map(member => (
-                                    <MemberInList key={member.id} member={member}/>
+                                    <MemberInList key={member.id} member={member} />
                                 ))}
                                 <div className="p-3 border-t">
                                     <Button

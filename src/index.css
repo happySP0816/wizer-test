@@ -39,17 +39,6 @@ h1 {
   line-height: 1.1;
 }
 
-/* button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-} */
 button:hover {
   border-color: #646cff;
 }
@@ -68,24 +57,21 @@ button:focus-visible {
   }
 }
 
-/* Custom scrollbar for sidebar menu */
-.sidebar-menu-scroll::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 8px;
 }
-.sidebar-menu-scroll::-webkit-scrollbar-thumb {
-  background: #a18aff;
+*::-webkit-scrollbar-thumb {
+  background: #7B69AF;
   border-radius: 6px;
   transition: background 0.3s;
 }
-.sidebar-menu-scroll::-webkit-scrollbar-thumb:hover {
+*::-webkit-scrollbar-thumb:hover {
   background: #7b69af;
 }
-.sidebar-menu-scroll::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   background: transparent;
 }
-
-/* For Firefox */
-.sidebar-menu-scroll {
+* {
   scrollbar-width: thin;
-  scrollbar-color: #a18aff transparent;
+  scrollbar-color: #7B69AF transparent;
 }

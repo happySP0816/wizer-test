@@ -16,7 +16,6 @@ const Integration: React.FC<Slackintegrationprops> = ({ code, userProfile }) => 
   const [Isconfigured, setIsConfigured] = useState(false)
   const [message, setmessage] = useState('')
 
-  // // console.log("user is", userProfile)
   const titleStyle: React.CSSProperties = {
     margin: 'auto',
     textAlign: 'center',
@@ -84,7 +83,6 @@ const Integration: React.FC<Slackintegrationprops> = ({ code, userProfile }) => 
       return res
     } catch (error) {
       setIsConfigured(false)
-      // console.log(error)
     }
   }
 

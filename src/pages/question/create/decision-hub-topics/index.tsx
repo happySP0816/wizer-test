@@ -2,6 +2,7 @@ import { type FC, memo, useEffect, useState } from 'react'
 import { getDecisionHubTopic } from '@/apis/decision-hub'
 import { Typography } from '@/components/components/ui/typography'
 import { Badge } from '@/components/components/ui/badge'
+import Loading from '@/components/loading'
 
 interface Topic {
   id: number
@@ -23,7 +24,7 @@ const DecisionHubTopics: FC<DecisionHubTopicsProps> = ({ questionData, setQuesti
   const { categoryId } = questionData
   const [decisionHubTopics, setDecisionHubTopics] = useState<Topic[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  
+
   const handleDecisionHubTopic = async () => {
     setIsLoading(true)
     try {
@@ -35,7 +36,7 @@ const DecisionHubTopics: FC<DecisionHubTopicsProps> = ({ questionData, setQuesti
       setIsLoading(false)
     }
   }
-  
+
   useEffect(() => {
     handleDecisionHubTopic()
   }, [])
@@ -61,10 +62,9 @@ const DecisionHubTopics: FC<DecisionHubTopicsProps> = ({ questionData, setQuesti
       </Typography>
       <div className='flex flex-wrap gap-2'>
         {isLoading ? (
-          <div className="flex items-center justify-center w-full py-8">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
-            <span className="ml-2 text-gray-600">Loading topics...</span>
-          </div>
+          <Loading className='h-5 w-5'>
+            <Typography variant="body2">Loading topics...</Typography>
+          </Loading>
         ) : (
           decisionHubTopics.map(topic => (
             <MemoizedChip

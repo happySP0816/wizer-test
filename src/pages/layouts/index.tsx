@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { menuList } from './menu';
 import { WizerIconMap, WizerToptIcon } from '@/components/icons';
 import { Button } from '@/components/components/ui/button';
-import { useNavigate, useLocation, Outlet } from 'react-router-dom';
+import { useNavigate, useLocation, Outlet, Link } from 'react-router-dom';
 import { logoutUser } from '../auth/login';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/components/ui/avatar';
 import authRoute from '@/authentication/authRoute';
@@ -36,7 +36,7 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
 
       return initials.toUpperCase()
     }
-    
+
     return names[0].charAt(0).toUpperCase()
   }
 
@@ -49,7 +49,7 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
 
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    const checkMobile = () => setIsMobile(window.innerWidth < 1200);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -60,7 +60,6 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
     const handleScroll = (e: Event) => {
       const target = e.target as HTMLElement;
       const scrollTop = target.scrollTop;
-      console.log(scrollTop)
       setShowScrollTop(scrollTop > 300);
     };
 
@@ -118,10 +117,12 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
       )}
       {/* Sidebar */}
       <aside
-        className={`w-60 color-white flex flex-col justify-between pt-4 pb-1 h-screen bg-[#7b69af] box-shadow-[2px_0_16px_rgba(0,0,0,0.10)] transition-left duration-300 ${isMobile ? 'fixed' : 'fixed'} ${isMobile ? isSidebarOpen ? 'left-0' : 'left-[-260px]' : 'left-0'}`}
+        className={`w-60 color-white flex flex-col justify-between pt-4 pb-1 h-screen bg-[#7b69af] box-shadow-[2px_0_16px_rgba(0,0,0,0.10)] transition-left duration-300 ${isMobile ? 'fixed z-[1000]' : 'fixed'} ${isMobile ? isSidebarOpen ? 'left-0' : 'left-[-260px]' : 'left-0'}`}
       >
         <div className='relative text-center mb-8'>
-          <div className='font-bold text-4xl tracking-2 text-white'>wizer</div>
+          <Link to="/dashboard">
+            <div className='font-bold text-4xl tracking-2 text-white'>wizer</div>
+          </Link>
           {isMobile && (
             <div className='absolute right-4 top-1'>
               <Button
@@ -202,7 +203,7 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
         <div className='flex-none' style={{ textAlign: 'center', padding: '0 0 12px 0', borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: 'auto' }}>
           <div style={{ marginBottom: 8, paddingTop: 12 }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
-              <Avatar 
+              <Avatar
                 className='feedUserImage w-10 h-10'
               >
                 <AvatarImage src={userImageSrc} alt="@shadcn" />
@@ -216,9 +217,9 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
           <Button className={`text-white w-[200px] !border !border-white rounded-[3px] !h-10`} onClick={() => handleLogoutPress('/login')}>LOGOUT</Button>
         </div>
       </aside>
-      <main style={{ 
-        flex: 1, 
-        background: '#fff', 
+      <main style={{
+        flex: 1,
+        background: '#fff',
         minHeight: '100vh',
         marginLeft: isMobile ? 0 : 240,
         overflowY: 'auto',
@@ -226,18 +227,15 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = (props) => {
       }}>
         <Outlet />
       </main>
-
-      {/* Scroll to top button */}
       {showScrollTop && (
         <Button
           onClick={scrollToTop}
+          className='!h-10 !w-10'
           style={{
             position: 'fixed',
             bottom: 30,
             right: isMobile ? 30 : 50,
             zIndex: 1000,
-            width: 40,
-            height: 40,
             borderRadius: '50%',
             background: '#7b69af',
             color: '#fff',

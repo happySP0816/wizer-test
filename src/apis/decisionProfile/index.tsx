@@ -21,7 +21,6 @@ export const getdecisionProfileStatus = async (userId: number) => {
 
     return response.data;
   } catch (error) {
-    console.log('error', error)
     throw new Error("Failed to check decision profile status");
   }
 };

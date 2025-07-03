@@ -9,6 +9,7 @@ import { Typography } from '@/components/components/ui/typography'
 import { WizerGroupIcon } from '@/components/icons'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
+import Loading from '@/components/loading'
 
 interface TeamData {
   name: string
@@ -44,6 +45,7 @@ const AllTeams: React.FC<PanelsProps> = (props) => {
   const [teamName, setTeamName] = useState<string>('')
   const [editingTeamId, setEditingTeamId] = useState<number | null>(null)
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [progress, setProgress] = useState(0)
 
   const orgId = props.user.small_decision.organization_id
   const navigate = useNavigate()
@@ -89,6 +91,25 @@ const AllTeams: React.FC<PanelsProps> = (props) => {
   useEffect(() => {
     fetchTeams()
   }, [])
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (loading) {
+      setProgress(0);
+      interval = setInterval(() => {
+        setProgress(prev => {
+          if (prev < 90) return prev + Math.random() * 10;
+          return prev;
+        });
+      }, 200);
+    } else {
+      setProgress(100);
+      setTimeout(() => setProgress(0), 400);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [loading]);
 
   const editTeamName = async (name: string, id: number) => {
     setEditLoading(id, true)
@@ -161,9 +182,7 @@ const AllTeams: React.FC<PanelsProps> = (props) => {
       </div>
       <div className="p-6">
         {loading ? (
-          <div>
-            <Progress />
-          </div>
+          <Loading />
         ) : (
           <div>
             {isAddTeam && (

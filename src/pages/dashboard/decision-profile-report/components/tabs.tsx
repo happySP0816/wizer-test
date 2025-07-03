@@ -235,7 +235,7 @@ export const DecisionProfileTabs = ({ scores, traitDescriptions, profileDynamicD
       <div className="bg-white rounded-lg shadow-none">
         <div className="flex gap-2 border-b border-gray-200 overflow-x-auto">
           {tabLabels.map((label, idx) => (
-            <Button
+            <Button 
               key={label}
               className={`h-[25px] cursor-pointer px-4 text-sm rounded-none rounded-t-xs font-medium transition-colors duration-700 ${value === idx ? 'bg-primary text-white font-semibold border' : 'bg-gray-200 text-gray-700'} hover:!text-white focus:!outline-none`}
               onClick={() => handleChange(idx)}

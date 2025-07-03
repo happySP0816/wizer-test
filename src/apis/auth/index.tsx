@@ -144,10 +144,8 @@ export const getUserRoles = async (): Promise<any> => {
   }
   try {
     const data = await getMembershipDetail(payload)
-    console.log("data",data)
     const resData: Record<string, any> = {};
     for (const key in data) {
-      // // console.log('key', key)
       if (data[key] === null) {
         resData['user']={
           name: 'user',
@@ -190,12 +188,9 @@ export const getUserRoles = async (): Promise<any> => {
         }
       }
       }
-    // console.log('resData: ', resData);
 
     return resData
   } catch (error) {
-      // console.log(error);
-      
       return error
   }
 }

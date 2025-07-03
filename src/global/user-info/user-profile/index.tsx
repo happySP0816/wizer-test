@@ -53,7 +53,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ image, name, bio, hideEditBtn
             </div>
             {!hideEditBtn && (
               <div className='absolute top-2.5 right-3.5'>
-                <Link to='/edit-user-profile'>
+                <Link to='/profile'>
                   <WizerProfileEditIcon size={24} style={{color: '#7B69AF'}} />
                 </Link>
               </div>

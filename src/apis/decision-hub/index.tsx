@@ -80,10 +80,8 @@ export const getOrganizationMembers = async (organizationId: number): Promise<an
 export const createDecisionHubPost = async (postData: any) => {
   try {
     const response = await axios.post('/posts', postData)
-    console.log("sdfsdfsdfsdfsdfsdf", response)
     return response.data
   } catch (error) {
-    console.error('Error creating decision hub post:', error)
     throw error
   }
 }
@@ -104,8 +102,6 @@ export const getDecisionHubPost = async (organizationId: any,userId:any): Promis
     `/organization/get/organization/posts?viewerid=${userId}&id=${organizationId}&visbility=${'decision_hub'}&closed=${'true'}&contributor=${'true'}`
   )
 
-  // // console.log(response)
-
   return response.data
 }
 
@@ -114,8 +110,6 @@ export const getDecisionHubPostAdmin = async (organizationId: any): Promise<any>
   const response = await axios.get<any>(
     `/organization/get/organization/posts?id=${organizationId}&visbility=${'decision_hub'}&closed=${'true'}`
   )
-
-  // // console.log(response)
 
   return response.data
 }

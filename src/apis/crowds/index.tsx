@@ -6,8 +6,6 @@ export const getCrowds = async () => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-
     return false
   }
 }
@@ -23,8 +21,6 @@ export const addCrowd = async (title: string, organizationId: string) => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-
     return false
   }
 }
@@ -38,8 +34,6 @@ export const editCrowd = async (title: string, crowdId: number) => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-
     return false
   }
 }
@@ -50,8 +44,6 @@ export const deleteCrowd = async (crowdId: number) => {
     
 return response.data
   } catch (error) {
-    // console.log(error.message)
-
     return false
   }
 }
@@ -98,8 +90,6 @@ export const addCrowdParticipants = async (crowdId: number, participants: number
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-
     return false
   }
 }
@@ -116,8 +106,6 @@ export const deleteCrowdParticipant = async (userId: number, crowdId: number) =>
     
 return response.data
   } catch (error) {
-    // console.log(error.message)
-
     return false
   }
 }

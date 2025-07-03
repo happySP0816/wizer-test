@@ -28,6 +28,7 @@ import { Dialog, DialogContent } from "@/components/components/ui/dialog"
 import { Loader2 } from "lucide-react"
 import DecisionHubPostTotalPreview from './create/decision-hub-post-review/view'
 import type { DecisionCrowd, SelectedPerson } from './create/decision-hub-post-review/types'
+import Loading from '@/components/loading'
 
 type UserProfileType = {
   username: string;
@@ -259,7 +260,6 @@ const Question: React.FC<DashboardProps> = (props) => {
 
       // Prepare the data for submission
       const submissionData = { ...questionData }
-      console.log("sdfsdfsdf",submissionData)
 
       // Clean up empty medias field
       if (submissionData['medias'] === '' || submissionData['medias'] === null || submissionData['medias'] === undefined || submissionData['medias'].length === 0) {
@@ -399,9 +399,7 @@ const Question: React.FC<DashboardProps> = (props) => {
           </div>
         </div>
         {pageLoading ? (
-          <div className="flex justify-center items-center flex-1">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-          </div>
+          <Loading />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 flex-1">
             <div className="col-span-12 flex flex-col h-full w-full gap-8">

@@ -21,8 +21,6 @@ export const getAllCategories = async () => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
     return false
   }
 }
@@ -33,9 +31,7 @@ export const getCategories = async (userId: number) => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -49,8 +45,6 @@ export const getAllCategoriesByType = async () => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
     return false
   }
 }
@@ -67,9 +61,7 @@ export const editCategories = async (ids: number[]) => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -86,9 +78,7 @@ export const editUser = async (name: string, bio: string, birthday: number, loca
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -100,12 +90,10 @@ export const editPassword = async (oldPassword: string, newPassword: string) => 
 
   try {
     const response = await axios.patch('/users/edit/password', payload)
-    
-return response.data
+
+    return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -117,9 +105,7 @@ export const getAllPersonalityQuestions = async () => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -129,9 +115,7 @@ export const getUserPersonalityQuestions = async () => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -142,12 +126,10 @@ export const editPersonalityQuestionsAnswers = async (personalityQuestionsAnswer
 
   try {
     const response = await axios.patch('/users/edit/personality', payload)
-    
-return response.data
+
+    return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -159,9 +141,7 @@ export const getAllEducations = async () => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -171,9 +151,7 @@ export const getUserEducation = async () => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -183,12 +161,10 @@ export const setUserEducation = async (education: string) => {
   }
   try {
     const response = await axios.patch('/users/edit/educations', payload)
-    
-return response.data
+
+    return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -199,9 +175,7 @@ export const getAllProfessions = async () => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -211,9 +185,7 @@ export const getUserProfession = async () => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -223,12 +195,10 @@ export const setUserProfession = async (profession: string) => {
   }
   try {
     const response = await axios.patch('/users/edit/professions', payload)
-    
-return response.data
+
+    return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -239,9 +209,7 @@ export const getAllEthnicities = async () => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 export const getUserEthnicities = async () => {
@@ -250,9 +218,7 @@ export const getUserEthnicities = async () => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -262,12 +228,10 @@ export const setUserEthnicities = async (ethnicities: string[]) => {
   }
   try {
     const response = await axios.patch('/users/edit/ethnicities', payload)
-    
-return response.data
+
+    return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -278,9 +242,7 @@ export const getAllHobbiesOrInterests = async () => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -290,9 +252,7 @@ export const getUserHobbiesOrInterests = async () => {
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-    
-return false
+    return false
   }
 }
 
@@ -305,8 +265,6 @@ export const setUserHobbiesOrInterests = async (hobbiesOrInterests: string[]) =>
 
     return response.data
   } catch (error) {
-    // console.log(error.message)
-
     return false
   }
 }
@@ -314,7 +272,7 @@ export const setUserHobbiesOrInterests = async (hobbiesOrInterests: string[]) =>
 export const deletePost = async (postId: any) => {
   try {
     const response = await axios.delete(`/posts/${postId}`);
-    
+
     return response.data;
   } catch (error: any) {
     return false;

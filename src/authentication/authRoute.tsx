@@ -46,12 +46,11 @@ const authRoute = <P extends AuthRouteProps>(Component: ComponentType<P>) => {
               const userPersonalityQuestion = await getUserPersonalityQuestions()
               const UserProfile = (res as any).data.user
               const response = await getUserRoles()
-              console.log("ddd",response)
               setUser(response)
               setUserProfile(UserProfile)
               setAuthenticated(true)
               setUserPersonalityQuestion(userPersonalityQuestion.personalityQuestionsAnswers)
-              if('small_decision' in response) {
+              if ('small_decision' in response) {
                 if (
                   UserProfile.bio === null ||
                   UserProfile.gender === null ||
@@ -81,14 +80,14 @@ const authRoute = <P extends AuthRouteProps>(Component: ComponentType<P>) => {
 
       checkToken()
     }, [authenticated])
-    
+
     if (authenticated === null) {
       navigate(`/login?redirectTo=${encodeURIComponent(redirectUrl || location.pathname)}`);
     }
-    
+
     if (authenticated) {
       return <Component {...props as P} user={user} authenticated={authenticated} userProfile={userProfile} />
-    } 
+    }
     else {
       return null
     }

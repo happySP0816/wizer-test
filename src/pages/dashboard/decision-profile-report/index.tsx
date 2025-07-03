@@ -120,9 +120,9 @@ const DecisionProfileReport: React.FC<any> = ({ userProfile }) => {
                 The {scores['profiletype'] ?? ''}
               </Typography>
               {scores['profiletype'] && (
-                <div 
+                <div
                   className="text-base text-black leading-7"
-                  dangerouslySetInnerHTML={{ __html: profileDescriptions[scores['profiletype']] }} 
+                  dangerouslySetInnerHTML={{ __html: profileDescriptions[scores['profiletype']] }}
                 />
               )}
             </div>

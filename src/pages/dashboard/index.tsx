@@ -8,6 +8,9 @@ import type { Invite, Post } from '@/apis/dashboard'
 import YourDecisionMaking from '@/global/dashboard/YourDecisionMaking'
 import { UserCategories, UserProfile, UserProfileStats } from '@/global/user-info'
 import authRoute from '@/authentication/authRoute'
+import { Input } from "@/components/components/ui/input"
+import { Send } from "lucide-react"
+import Loading from '@/components/loading'
 
 interface UserProfileType {
   id: string
@@ -97,23 +100,13 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
 
   return (
     <div className="min-h-screen p-[30px] flex flex-col gap-8">
-      <div className="flex items-center justify-between flex-none">
-        <Typography className="flex items-center text-4xl font-bold">
-          {iconUrl && <img src={iconUrl} alt="time" className="w-8 h-8 mr-4" />}
-          Good {timeOfDay},{' '}
-          <span className="font-bold">&nbsp;{props.userProfile?.name || 'User'}</span>
-        </Typography>
-        <div className="flex gap-2">
-          <Button className='bg-[#0084CE] hover:bg-[#0084CE]/90 rounded-4xl' onClick={() => setIsWizerOpen(true)}>
-            Join the Wizer Community
-          </Button>
-          <Button className='bg-[#0084CE] hover:bg-[#0084CE]/90 rounded-4xl' onClick={() => setIsOrganizationOpen(true)}>
-            Add your Organization
-          </Button>
-        </div>
-      </div>
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 flex-1">
         <div className="md:col-span-8 col-span-12 flex flex-col h-full w-full gap-8">
+          <Typography className="flex items-center text-4xl font-bold">
+            {iconUrl && <img src={iconUrl} alt="time" className="w-8 h-8 mr-4" />}
+            Good {timeOfDay},{' '}
+            <span className="font-bold">&nbsp;{props.userProfile?.name || 'User'}</span>
+          </Typography>
           {/* profile section */}
           <div className='flex-none'>
             <Typography variant="h6" className="mb-2.5 font-bold">
@@ -122,15 +115,13 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
             {props.userProfile && <YourDecisionMaking userProfile={props.userProfile} />}
           </div>
           {/* notification section */}
-          <div className='flex-1'>
+          <div className='flex-1 flex flex-col'>
             <Typography variant="h6" className="mb-2.5 font-bold">
               NOTIFICATION FEED
             </Typography>
             <div className='flex flex-col gap-2.5'>
               {isLoading ? (
-                <div className="flex justify-center items-center py-8">
-                  <span>Loading...</span>
-                </div>
+                <Loading />
               ) : invitePostData && totalNotifcations && totalNotifcations.length > 0 ? (
                 invitePostData.map(({ invite, post }) => {
                   const feedPostId = post?.id
@@ -162,45 +153,86 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
             </div>
           </div>
         </div>
-        <div className="md:col-span-4 col-span-12">
-          <Typography variant="h6" className="mb-2.5 font-bold">PROFILE</Typography>
-          {props.userProfile && (
-            <div className="bg-white rounded-lg border p-4 flex flex-col items-center justify-center relative gap-9">
-              <UserProfile image={props.userProfile.image} name={props.userProfile.name} bio={props.userProfile.bio} />
-              <UserCategories userId={props.userProfile.id} />
-              <UserProfileStats
-                numberOfPosts={props.userProfile.numberOfPosts}
-                numberOfFollowers={props.userProfile.numberOfFollowers}
-                numberOfFriends={props.userProfile.numberOfFriends}
-                numberOfFollowing={props.userProfile.numberOfFollowing}
-              />
+        <div className="md:col-span-4 col-span-12 border-l border-gray-200 pl-5">
+          <div className='sticky t-[30px]'>
+            {props.userProfile && (
+              <div className="bg-white rounded-lg p-4 flex flex-col items-center justify-center relative gap-9">
+                <UserProfile image={props.userProfile.image} name={props.userProfile.name} bio={props.userProfile.bio} />
+                <UserCategories userId={props.userProfile.id} />
+                <UserProfileStats
+                  numberOfPosts={props.userProfile.numberOfPosts}
+                  numberOfFollowers={props.userProfile.numberOfFollowers}
+                  numberOfFriends={props.userProfile.numberOfFriends}
+                  numberOfFollowing={props.userProfile.numberOfFollowing}
+                />
+              </div>
+            )}
+            <div className="flex flex-col gap-2 p-4">
+              <Button variant="outline" className='border border-primary text-primary font-semibold' onClick={() => setIsWizerOpen(true)}>
+                Join the Wizer Community
+              </Button>
+              <Button className='font-semibold' onClick={() => setIsOrganizationOpen(true)}>
+                Add your Organization
+              </Button>
             </div>
-          )}
+          </div>
         </div>
       </div>
       <Dialog open={isWizerOpen} onOpenChange={setIsWizerOpen}>
-        <DialogContent>
-          <DialogTitle>Coming Soon!</DialogTitle>
-          <DialogDescription>
-            Your decision profile will be certified and you will be rewarded for helping organizations make decisions.
+        <DialogContent className="max-w-md text-center">
+          <DialogTitle className="text-2xl font-bold mb-4">
+            Sign up to join the<br />Wizer Community
+          </DialogTitle>
+          <form
+            className="w-full flex flex-col items-center"
+            onSubmit={e => {
+              e.preventDefault()
+              setIsWizerOpen(false)
+              // handle email submit here
+            }}
+          >
+            <div className="relative w-full mb-6">
+              <Input
+                type="email"
+                placeholder="Email Address"
+                className="pr-12 text-base"
+                required
+              />
+              <Button
+                type="submit"
+                size="icon"
+                className="absolute right-1 py-1 top-1/2 -translate-y-1/2 bg-transparent hover:bg-gray-100 text-primary"
+              >
+                <Send className="w-5 h-5" />
+              </Button>
+            </div>
+          </form>
+          <DialogDescription className="text-base text-gray-700 text-start px-2.5">
+            Your decision profile will be certified and you will be rewarded for helping organizations make decisions
           </DialogDescription>
         </DialogContent>
       </Dialog>
       <Dialog open={isOrganizationOpen} onOpenChange={setIsOrganizationOpen}>
-        <DialogContent>
-          <DialogTitle>Add Your Organization</DialogTitle>
-          <DialogDescription>
+        <DialogContent className="max-w-md text-center">
+          <Button
+            className="mx-auto mb-6 mt-2 w-2/3 text-white font-semibold rounded-lg"
+            onClick={() => setIsOrganizationOpen(false)}
+          >
+            Add Organization
+          </Button>
+          <Typography className="mb-4 text-base text-gray-800">
             Add your Organization so your teams can see their Decision Profiles in action.
-            <div className="mt-4 flex flex-col items-center">
-              <Button className="mb-2" onClick={() => setIsOrganizationOpen(false)}>
-                Add
-              </Button>
-              <Button variant="link" onClick={() => setIsOrganizationOpen(false)}>
-                Click here
-              </Button>
-              <span className="text-xs text-gray-500">if your company already has an account.</span>
-            </div>
-          </DialogDescription>
+          </Typography>
+          <Typography className="text-sm text-gray-600">
+            <Button
+              variant="link"
+              className="p-0 h-auto align-baseline text-primary"
+              onClick={() => setIsOrganizationOpen(false)}
+            >
+              Click here
+            </Button>
+            &nbsp;if your company already has an account
+          </Typography>
         </DialogContent>
       </Dialog>
     </div>

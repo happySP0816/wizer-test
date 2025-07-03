@@ -9,16 +9,17 @@ import Dashboard from '@/pages/dashboard';
 import Feed from '@/pages/feed';
 import Questions from '@/pages/question';
 import Panels from '@/pages/panels';
-import Groups from '@/pages/groups';
 import People from '@/pages/people';
-import Integrations from '@/pages/integrations';
+import AddNewPerson from '@/pages/people/add-new-person';
+import Groups from '@/pages/groups';
 import CompanyProfile from '@/pages/company-profile';
 import Posts from '@/pages/posts';
 import CreatePost from '@/pages/create-post';
 import AddMembersPanel from '@/pages/panels/add-members';
 import AddMembersGroup from '@/pages/groups/add-members';
-import AllPeople from '@/pages/all-people';
 import DecisionProfileReport from '@/pages/dashboard/decision-profile-report';
+import Integrations from '@/pages/integrations';
+import Profile from '@/pages/profile';
 
 const AppRoutes = () => (
   <Router>
@@ -28,6 +29,7 @@ const AppRoutes = () => (
       <Route path="/reset-password" element={<ResetPass />} />
       <Route element={<SidebarLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/decision-profile-report" element={<DecisionProfileReport />} />
         <Route path="/feed" element={<Feed />} />
         <Route path="/ask-new-question" element={<Questions />} />
@@ -35,7 +37,8 @@ const AppRoutes = () => (
         <Route path="/panels/add-members" element={<AddMembersPanel />} />
         <Route path="/groups" element={<Groups />} />
         <Route path="/groups/add-members" element={<AddMembersGroup />} />
-        <Route path="/people" element={<AllPeople />} />
+        <Route path="/people" element={<People />} />
+        <Route path="/people/add-new-person" element={<AddNewPerson />} />
         <Route path="/integrations" element={<Integrations />} />
         <Route path="/company-profile" element={<CompanyProfile />} />
         <Route path="/posts" element={<Posts />} />

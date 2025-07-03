@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import { Typography } from '@/components/components/ui/typography'
 import authRoute from '@/authentication/authRoute'
 import { WizerStarIcon } from '@/components/icons'
+import Loading from '@/components/loading'
 
 interface PanelsProps {
   userProfile: UserProfileType
@@ -82,7 +83,6 @@ const AllCrowds: React.FC<PanelsProps> = (props) => {
   const createCrowd = async (title: string) => {
     setLoadingCreate(true)
     const res = await addCrowd(title, orgId.toString())
-    console.log("Sdsds", res)
     if (res && res.DecsionHubcrowd && res.DecsionHubcrowd.id) {
       setCrowds(prevCrowds => [...prevCrowds, { title: title, id: res.DecsionHubcrowd.id }])
       toast.success('Panel Creation Successful');
@@ -155,9 +155,7 @@ const AllCrowds: React.FC<PanelsProps> = (props) => {
       </div>
       <div className="p-6">
         {loading ? (
-          <div>
-            <Progress />
-          </div>
+          <Loading />
         ) : (
           <div>
             {isAddCrowd && (
