@@ -19,7 +19,7 @@ const authRoute = <P extends AuthRouteProps>(Component: ComponentType<P>) => {
     const [user, setUser] = useState<any>(null)
     const [userProfile, setUserProfile] = useState<any>(null)
     const [authenticated, setAuthenticated] = useState<boolean | null>(null)
-    const [redirectUrl, setRedirectUrl] = useState<string | null>(null)
+    const [, setRedirectUrl] = useState<string | null>(null)
     const [, setUserPersonalityQuestion] = useState<any>()
 
     const [, setProfile] = useState<any>(null)

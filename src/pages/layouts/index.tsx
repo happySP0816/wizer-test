@@ -157,16 +157,6 @@ const SidebarLayout: React.FC<SidebarLayoutProps & { user?: any }> = (props) => 
           <Link to="/dashboard">
             <div className='font-bold text-4xl tracking-2 text-white'>wizer</div>
           </Link>
-          <div
-            className='font-bold text-4xl tracking-2 text-white cursor-pointer'
-            onClick={() => navigate('/dashboard')}
-            role="button"
-            tabIndex={0}
-            onKeyPress={e => { if (e.key === 'Enter' || e.key === ' ') navigate('/dashboard'); }}
-            aria-label="Go to dashboard"
-          >
-            wizer
-          </div>
           {isMobile && (
             <div className='absolute right-4 top-1'>
               <Button

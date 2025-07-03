@@ -1,8 +1,6 @@
 import React, { useEffect, useImperativeHandle, useState, forwardRef } from 'react';
 import { Label } from '@/components/components/ui/label';
 import { Input } from '@/components/components/ui/input';
-import { Button } from '@/components/components/ui/button';
-import { Badge } from '@/components/components/ui/badge';
 import { editUser, getUserByUserName } from '@/apis/profile';
 import type { UserErrors, UserFields, ValidationRules, UserProfile } from '../type';
 
@@ -16,7 +14,7 @@ type UserState = {
 } & { [key: string]: string };
 
 const BlankUserDetails = forwardRef((props: BlankUserDetailsProps, ref) => {
-  const [disableSave, setDisableSave] = useState(true);
+  const [, setDisableSave] = useState(true);
   const [bioCharactersRemaining, setBioCharactersRemaining] = useState(254);
   const [userErrors, setUserErrors] = useState<UserErrors>({
     firstNameError: '',
@@ -46,11 +44,6 @@ const BlankUserDetails = forwardRef((props: BlankUserDetailsProps, ref) => {
   });
 
   const username = props.userProfile && props.userProfile.username;
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success'
-  });
 
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [toastType, setToastType] = useState<'success' | 'error'>('success');

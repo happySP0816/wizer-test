@@ -18,7 +18,7 @@ const UserInfoMain: React.FC<UserInfoMainProps> = ({ userProfile }) => {
 
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
-  const [severity, setSeverity] = useState<'success' | 'error' | 'info' | 'warning'>('success');
+  const [, setSeverity] = useState<'success' | 'error' | 'info' | 'warning'>('success');
   const childRef = useRef<{ handleSaveUserData: () => void } | null>(null);
   const diversityChildRef = useRef<any>(null);
   const navigate = useNavigate();

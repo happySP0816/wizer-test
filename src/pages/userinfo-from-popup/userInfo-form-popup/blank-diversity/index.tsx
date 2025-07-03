@@ -1,5 +1,4 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
-import { Button } from '@/components/components/ui/button'
 import { Label } from '@/components/components/ui/label'
 import { Badge } from '@/components/components/ui/badge'
 import { Toaster } from '@/components/components/ui/sonner'
@@ -22,7 +21,7 @@ interface BlankDiversityProps {
   setDisableSave: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const BlankDiversity = forwardRef(({ setDisableSave }: BlankDiversityProps, ref) => {
-  const [loading, setLoading] = useState<boolean>(false)
+  const [, setLoading] = useState<boolean>(false)
   const [allEducations, setAllEducations] = useState<any[]>([])
   const [allProfessions, setAllProfessions] = useState<any[]>([])
   const [allEthnicities, setAllEthnicities] = useState<any[]>([])
@@ -163,9 +162,6 @@ const BlankDiversity = forwardRef(({ setDisableSave }: BlankDiversityProps, ref)
     const isDisabled = education === '' || profession === '' || ethnicities.length === 0 || hobbiesOrInterests.length === 0;
     setDisableSave(isDisabled);
   }, [education, profession, ethnicities, hobbiesOrInterests, setDisableSave]);
-
-  const disableSave =
-    education === '' || profession === '' || ethnicities.length === 0 || hobbiesOrInterests.length === 0
 
   return (
     <div className="w-full flex justify-center">
