@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/components/ui/button'
 import { Typography } from '@/components/components/ui/typography'
 import authRoute from '@/authentication/authRoute'
-import { createDecisionHubPost, getDecisionHubPost, getDecisionHubPostAdmin, getDecisionHubPostListing, getDecisionHubPostListingAdmin, getDecisionHubTopic } from '@/apis/decision-hub'
+import { createDecisionHubPost, getDecisionHubPost, getDecisionHubPostAdmin, getDecisionHubPostListing, getDecisionHubPostListingAdmin, getDecisionHubTopic, uploadDecisionPostImage, uploadDecisionPostVideo } from '@/apis/decision-hub'
 import { toast } from 'sonner'
 import CompleteQuestion from './complete-question'
 import { getNumberOfDaysLeft } from '@/helper'
@@ -24,6 +24,7 @@ import DecisionHubTopics from './create/decision-hub-topics'
 import DecisionHubDuration from './create/decision-hub-duration'
 import DecisionHubSelectCrowd from './create/decision-hub-select-crowd'
 import DecisionHubPostPreview from './create/decision-hub-post-review'
+import DecisionHubMediaSelect from './create/decision-hub-multiple-choice'
 import { Dialog, DialogContent } from "@/components/components/ui/dialog"
 import { Loader2 } from "lucide-react"
 import DecisionHubPostTotalPreview from './create/decision-hub-post-review/view'
@@ -75,6 +76,11 @@ interface DecisionTopic {
   }
 }
 
+interface Media {
+  image: File | null
+  text: string
+}
+
 const Question: React.FC<DashboardProps> = (props) => {
   const orgId = Number(props.user.small_decision.organization_id)
   const navigate = useNavigate()
@@ -109,6 +115,9 @@ const Question: React.FC<DashboardProps> = (props) => {
     invites: [],
     DecisionHubCrowd_invites: []
   })
+  const [, setSnackbarMessage] = useState<string>('')
+  const [, setSnackbarOpen] = useState<boolean>(false)
+  const [, setSeverity] = useState<string>('')
 
   const setResetQuestionData = () => {
     setQuestionData({
@@ -200,11 +209,82 @@ const Question: React.FC<DashboardProps> = (props) => {
 
     return rangeWithDots
   }
+  
+  const handleMediaFileSelect = async (file: File | null) => {
+    if (!file) {
+      setSelectedImage(null)
+      return
+    }
+    
+    setSelectedImage(file)
+
+    try {
+      let response
+      if (file.type.includes('image')) {
+        response = await uploadDecisionPostImage(file)
+      } else {
+        response = await uploadDecisionPostVideo(file)
+      }
+      if (response.id) {
+        setQuestionData({
+          ...questionData,
+          medias: [
+            {
+              id: response.id
+            }
+          ]
+        })
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const handleMediaSelect = async (medias: Media, index: number, optionData: any[]) => {
+    setSelectedImage(optionData[index])
+    if (questionData.questionType === 'multiple_choice' || questionData.questionType === 'ranking') {
+      try {
+        const updatedMediaOptions = [...questionData.options]
+
+        if (medias.image) {
+          const imageResponse = await uploadDecisionPostImage(medias.image)
+
+          const mediaId = imageResponse.id
+
+          updatedMediaOptions[index] = {
+            mediaId,
+            text: medias.text || ''
+          }
+        } else {
+          updatedMediaOptions[index] = {
+            ...(medias.image ? { mediaId: '' } : {}),
+            text: medias.text || ''
+          }
+        }
+
+        setQuestionData({
+          ...questionData,
+          options: updatedMediaOptions
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  }
 
   const componentMap = {
-    ranking: (<></>),
+    multiple_choice: (
+      <DecisionHubMediaSelect
+        selectedImage={selectedImage}
+        questionData={questionData}
+        onMediaSelect={handleMediaSelect}
+        setSnackbarOpen={setSnackbarOpen}
+        setSnackbarMessage={setSnackbarMessage}
+        setSeverity={setSeverity}
+      />
+    ),
     open_ended: <DecisionHubOpenEnded />,
-    yes_or_no: <DecisionHubYesOrNo selectedImage={selectedImage as File} setSelectedImage={setSelectedImage} questionData={questionData} setQuestionData={setQuestionData} />
+    yes_or_no: <DecisionHubYesOrNo onMediaSelect={handleMediaFileSelect} />
   }
 
   const validateFormData = () => {
